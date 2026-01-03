@@ -7,13 +7,13 @@ export abstract class BaseEntity {
     @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     createDateTime: Date;
 
-    @Column({ type: 'varchar', length: 300 })
+    @Column({ type: 'varchar', length: 50 })
     createdBy: string;
 
     @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     lastChangedDateTime: Date;
 
-    @Column({ type: 'varchar', length: 300 })
+    @Column({ type: 'varchar', length: 50 })
     lastChangedBy: string;
 }
 
