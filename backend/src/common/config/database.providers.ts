@@ -11,11 +11,11 @@ export const databaseProviders = [
         type: 'postgres',
         host: 'localhost',
         port: 5432,
-        username: 'root',
-        password: 'root',
-        database: 'test',
+        username: 'sven1',
+        password: 'sven1',
+        database: 'timetracker',
         entities: [
-            __dirname + '/../**/*.entity{.ts,.js}',
+            __dirname + '/../**/model/entity/*.{.ts,.js}',
         ],
         synchronize: true,
       });
