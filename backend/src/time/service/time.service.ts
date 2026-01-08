@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm/browser/repository/Repository.js';
+import { Repository } from 'typeorm';
 import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
 
