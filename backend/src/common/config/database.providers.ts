@@ -16,6 +16,7 @@ export const databaseProviders = [
         database: 'timetracker',
         entities: [
             __dirname + '/../../**/model/entity/*.{ts,js}',
+            __dirname + '/../**/model/entity/*.{ts,js}', 
         ],
         synchronize: true,
       });
