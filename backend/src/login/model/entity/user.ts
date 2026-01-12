@@ -10,11 +10,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Module } from '@nestjs/common';
-import { CommonModule } from 'src/common/common.module';
-import { LoginController } from './controller/login/login.controller';
-import { LoginService } from './service/login/login.service';
-import { userProviders } from './model/entity/user.providers';
+import { BaseEntity, Column } from "typeorm";
 
-@Module({imports: [CommonModule],controllers: [LoginController], providers: [LoginService, ...userProviders]})
-export class LoginModule {}
+export class User extends BaseEntity {
+    @Column({type: 'varchar', length: 100})
+    username: string;
+
+    @Column({type: 'varchar', length: 100})
+    password: string; 
+
+    @Column({type: 'boolean'})
+    disabled: boolean;
+}

@@ -12,7 +12,7 @@
  */
 import { Controller } from '@nestjs/common';
 
-@Controller('login')
+@Controller('/rest/login')
 export class LoginController {
     
 }
