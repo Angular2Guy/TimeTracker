@@ -10,7 +10,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { BaseEntity, Column } from "typeorm";
+import { BaseEntity } from "../../../common/model/entity/base";
+import {Column } from "typeorm";
 
 export class User extends BaseEntity {
     @Column({type: 'varchar', length: 100})

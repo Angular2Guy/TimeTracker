@@ -11,6 +11,59 @@
    limitations under the License.
  */
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LoginRequest } from 'src/login/model/dto/login';
+import { User } from 'src/login/model/entity/user';
+import { Repository } from 'typeorm';
+import * as argon2 from 'argon2';
+import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
-export class LoginService {}
+export class LoginService {
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>,private jwtService: JwtService) {}
+  
+private async hashPassword(password: string): Promise<string> {
+  return argon2.hash(password, {
+    type: argon2.argon2id, // BEST PRACTICE
+    memoryCost: 2 ** 16,   // 64 MB
+    timeCost: 3,
+    parallelism: 1,
+  });
+}
+
+private async verifyPassword(password: string, hash: string): Promise<boolean> {
+  return argon2.verify(hash, password);
+}
+
+  public async createUser(signinRequest: LoginRequest): Promise<string> {
+    const user = await this.usersRepository.findOneBy({username: signinRequest.username});
+    if (user) {
+      throw new Error('User already exists');
+    }
+    const hashedPassword = await this.hashPassword(signinRequest.password);
+    const newUser = this.usersRepository.create({
+      username: signinRequest.username,
+      password: hashedPassword,
+      disabled: false
+    });
+    await this.usersRepository.save(newUser);
+    return Promise.resolve('');
+  }
+
+  public async login(loginRequest: LoginRequest): Promise<string> {
+    const user = await this.usersRepository.findOneBy({username: loginRequest.username});
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const isPasswordValid = await this.verifyPassword(loginRequest.password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid password');
+    }
+    const payload = {
+      sub: user.id,
+      email: user.username,
+    };    
+    return this.jwtService.sign(payload);
+  }
+}
