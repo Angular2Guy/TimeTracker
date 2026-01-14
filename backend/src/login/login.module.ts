@@ -15,6 +15,12 @@ import { CommonModule } from 'src/common/common.module';
 import { LoginController } from './controller/login/login.controller';
 import { LoginService } from './service/login/login.service';
 import { userProviders } from './model/entity/user.providers';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
-@Module({imports: [CommonModule],controllers: [LoginController], providers: [LoginService, ...userProviders]})
+@Module({imports: [CommonModule,PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'supersecret',
+      signOptions: { expiresIn: '1m' },
+    }),],controllers: [LoginController], providers: [LoginService, ...userProviders]})
 export class LoginModule {}
