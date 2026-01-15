@@ -14,8 +14,21 @@ import { Module } from '@nestjs/common';
 import { TimeModule } from './time/time.module';
 import { LoginModule } from './login/login.module';
 import { CommonModule } from './common/common.module';
+import { RolesGuard } from './common/security/roles.guard';
+import { APP_GUARD } from '@nestjs/core/constants';
+import { JwtAuthGuard } from './common/security/jwt-auth.guard';
 
 @Module({
   imports: [TimeModule, LoginModule, CommonModule],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ]
 })
 export class AppModule {}

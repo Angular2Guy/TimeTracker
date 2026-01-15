@@ -13,7 +13,7 @@
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { LoginRequest } from 'src/login/model/dto/login';
-import { User } from 'src/login/model/entity/user';
+import { User, UserRole } from 'src/login/model/entity/user';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
@@ -38,14 +38,15 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
 }
 
   public async createUser(signinRequest: LoginRequest): Promise<string> {
-    const user = await this.usersRepository.findOneBy({username: signinRequest.username});
+    const user = await this.usersRepository.findOneBy({email: signinRequest.email});
     if (user) {
       throw new Error('User already exists');
     }
     const hashedPassword = await this.hashPassword(signinRequest.password);
     const newUser = this.usersRepository.create({
-      username: signinRequest.username,
+      email: signinRequest.email,
       password: hashedPassword,
+      role: UserRole.USER,
       disabled: false
     });
     await this.usersRepository.save(newUser);
@@ -53,7 +54,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
   }
 
   public async login(loginRequest: LoginRequest): Promise<string> {
-    const user = await this.usersRepository.findOneBy({username: loginRequest.username});
+    const user = await this.usersRepository.findOneBy({email: loginRequest.email});
     if (!user) {
       throw new Error('User not found');
     }
@@ -62,8 +63,9 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       throw new Error('Invalid password');
     }
     const payload = {
-      sub: user.id,
-      email: user.username,
+      sub: user.email,
+      role: user.role,
+      email: user.email,
     };    
     return this.jwtService.sign(payload);
   }

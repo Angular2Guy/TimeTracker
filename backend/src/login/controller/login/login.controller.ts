@@ -13,8 +13,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { LoginService } from '../../service/login/login.service';
 import type { LoginRequest, LoginResponse } from '../../model/dto/login';
-import { Observable, of } from 'rxjs';
+import { Public } from 'src/common/security/public.decorator';
 
+@Public()
 @Controller('/rest')
 export class LoginController {
     constructor(private loginService: LoginService) { }

@@ -10,24 +10,24 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { BaseEntity } from "../../../common/model/entity/base";
-import {Column } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
-export enum UserRole {
-    USER = 'user',
-    ADMIN = 'admin',
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET!,
+    });
   }
 
-export class User extends BaseEntity {  
-    @Column({type: 'varchar', length: 100})
-    email: string;
-
-    @Column({type: 'varchar', length: 100})
-    password: string; 
-
-    @Column({type: 'varchar', length: 50})
-    role: UserRole;
-
-    @Column({type: 'boolean'})
-    disabled: boolean;
+  async validate(payload: any) {
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      roles: payload.roles
+    };
+  }
 }

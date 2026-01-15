@@ -10,24 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { BaseEntity } from "../../../common/model/entity/base";
-import {Column } from "typeorm";
+import { SetMetadata } from '@nestjs/common';
 
-export enum UserRole {
-    USER = 'user',
-    ADMIN = 'admin',
-  }
-
-export class User extends BaseEntity {  
-    @Column({type: 'varchar', length: 100})
-    email: string;
-
-    @Column({type: 'varchar', length: 100})
-    password: string; 
-
-    @Column({type: 'varchar', length: 50})
-    role: UserRole;
-
-    @Column({type: 'boolean'})
-    disabled: boolean;
-}
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);

@@ -12,7 +12,10 @@
  */
 import { Controller, Get } from '@nestjs/common';
 import { TimeService } from '../service/time.service';
+import { UserRole } from 'src/login/model/entity/user';
+import { Roles } from 'src/common/security/roles-decorator';
 
+@Roles(UserRole.USER)
 @Controller('/rest/time')
 export class TimeController {
   constructor(private readonly timeService: TimeService) {}
