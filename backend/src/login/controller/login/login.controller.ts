@@ -28,7 +28,7 @@ export class LoginController {
 
     @Post('/login')
     public async login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
-      let token = await this.loginService.login(loginRequest);
-      return Promise.resolve({token: token} as LoginResponse);
+      let result = await this.loginService.login(loginRequest);
+      return Promise.resolve(result);
     }
 }

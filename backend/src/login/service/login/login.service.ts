@@ -12,13 +12,12 @@
  */
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { LoginRequest } from 'src/login/model/dto/login';
+import { LoginRequest, LoginResponse } from 'src/login/model/dto/login';
 import { User, UserRole } from 'src/login/model/entity/user';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { userRepoKey } from '../../model/entity/user.providers';
-
 
 @Injectable()
 export class LoginService {
@@ -50,13 +49,13 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       disabled: false
     });
     await this.usersRepository.save(newUser);
-    return Promise.resolve('');
+    return '';
   }
 
-  public async login(loginRequest: LoginRequest): Promise<string> {
+  public async login(loginRequest: LoginRequest): Promise<LoginResponse> {
     const user = await this.usersRepository.findOneBy({email: loginRequest.email});
-    if (!user) {
-      throw new Error('User not found');
+    if (!user || user.disabled) {
+      throw new Error('invalid user');
     }
     const isPasswordValid = await this.verifyPassword(loginRequest.password, user.password);
     if (!isPasswordValid) {
@@ -67,6 +66,6 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       role: user.role,
       email: user.email,
     };    
-    return this.jwtService.sign(payload);
+    return { token: this.jwtService.sign(payload), roles: [user.role] };
   }
 }
