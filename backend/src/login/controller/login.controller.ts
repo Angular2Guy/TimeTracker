@@ -11,12 +11,12 @@
    limitations under the License.
  */
 import { Body, Controller, Post } from '@nestjs/common';
-import { LoginService } from '../../service/login/login.service';
-import type { LoginRequest, LoginResponse } from '../../model/dto/login';
-import { Public } from 'src/common/security/public.decorator';
+import { LoginService } from '../service/login/login.service';
+import type { LoginRequest, LoginResponse } from '../model/dto/login';
+import { Public } from '../../common/security/public.decorator';
 
 @Public()
-@Controller('/rest')
+@Controller('/rest/login')
 export class LoginController {
     constructor(private loginService: LoginService) { }
 
