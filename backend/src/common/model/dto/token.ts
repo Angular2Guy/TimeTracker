@@ -10,25 +10,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { TokenPayload } from 'src/common/model/dto/token';
-
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET!,
-    });
-  }
-
-  async validate(payload: TokenPayload) {
-    return {
-      userId: payload.sub,
-      email: payload.email,
-      roles: payload.roles
-    };
-  }
+export interface TokenPayload {
+  sub: string;
+  email: string;
+  roles: string[];
 }

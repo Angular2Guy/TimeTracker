@@ -18,6 +18,7 @@ import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { userRepoKey } from '../../model/entity/user.providers';
+import { TokenPayload } from 'src/common/model/dto/token';
 
 @Injectable()
 export class LoginService {
@@ -63,9 +64,9 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
     }
     const payload = {
       sub: user.email,
-      role: user.role,
+      roles: user.role.split(',').map(role => role.trim()),
       email: user.email,
-    };    
-    return { token: this.jwtService.sign(payload), roles: [user.role] };
+    } as TokenPayload;    
+    return { token: this.jwtService.sign(payload), roles: payload.roles };
   }
 }
