@@ -1,0 +1,17 @@
+{
+    "common": {
+        "ok": "OK",
+        "cancel": "Cancel",
+        "message": "Message",
+        "language": "Language",
+        "english": "English",
+        "german": "German",
+        "logout": "Logout"
+    },
+    "login": {     
+        "username": "Username",
+        "password": "Password",
+        "login": "Login",
+        "signin": "Sign In"
+    }
+}

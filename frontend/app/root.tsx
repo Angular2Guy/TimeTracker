@@ -22,6 +22,7 @@ import {
 import type { Route } from "./+types/root";
 import "./root.css";
 import { Provider } from "jotai";
+import './i18n/config';
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
