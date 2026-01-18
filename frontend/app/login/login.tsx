@@ -94,7 +94,7 @@ export function Login() {
     throw new Error("Function not implemented.");
   }
 
-  return (<div className={styles.content}>
+  return (<div className={styles.container}><div className={styles.content}>
     <Tabs value={activeTab} onChange={handleTabChange} aria-label="basic tabs example">
         <Tab label={t('login.login')} {...a11yProps(0)} />
         <Tab label={t('login.signin')} {...a11yProps(1)} />
@@ -221,5 +221,5 @@ export function Login() {
           </div>
         </Box>
       </TabPanel>      
-    </div>);
+    </div></div>);
 }
