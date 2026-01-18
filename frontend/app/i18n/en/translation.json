@@ -9,7 +9,7 @@
         "logout": "Logout"
     },
     "login": {     
-        "username": "Username",
+        "email": "EMail",
         "password": "Password",
         "login": "Login",
         "signin": "Sign In"

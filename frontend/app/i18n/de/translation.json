@@ -9,7 +9,7 @@
         "logout": "Abmelden"
     },
     "login": {     
-        "username": "Benutzername",
+        "email": "EMail",
         "password": "Passwort",
         "login": "Login",
         "signin": "Registrieren"
