@@ -11,7 +11,7 @@
    limitations under the License.
  */
 export interface LoginRequest {
-  id: number;
+  id?: string;
   email: string;
   password: string;
 }
