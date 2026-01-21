@@ -24,13 +24,13 @@ async function handleResponse<T>(response: Response,navigate: NavigateFunction):
   return response.json();
 }
 
-const postLogin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
+export const postLogin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
   const requestOptions = loginSigninOptions(email, password1, controller);
   const result = await fetch(`${apiPrefix}/login/login`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);
 }
 
-const postSignin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
+export const postSignin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
   const requestOptions = loginSigninOptions(email, password1, controller);
   const result = await fetch(`${apiPrefix}/login/signin`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);

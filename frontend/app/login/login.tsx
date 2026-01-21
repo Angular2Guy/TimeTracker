@@ -14,6 +14,7 @@ import { useAtom } from "jotai";
 import { useEffect, useState, type BaseSyntheticEvent, type ChangeEventHandler, type FormEvent } from "react";
 import { Dialog, DialogContent, Button, Tabs, Tab, Box, TextField, type SelectChangeEvent, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from "react-router";
+import { postLogin, postSignin } from "~/api/http-client";
 import GlobalState from "~/global-state";
 import { useTranslation, Trans } from 'react-i18next';
 import styles from './login.module.css';
@@ -43,6 +44,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export function Login() {
+  let controller: AbortController | null = null;  
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();  
   const [email, setEmail] = useState('');
@@ -90,8 +92,27 @@ export function Login() {
     i18n.changeLanguage(event.target.value).then();
   };
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+        if(!!controller) {
+      controller.abort();
+    }
+    setResponseMsg('');
+    controller = new AbortController();
+    const response = activeTab === 0 ? await postLogin(email, password1, controller) : await postSignin(email, password1, controller);
+    controller = null;
+    setGlobalJwtTokenState(response.token);
+    setGlobalRolesState(response.roles);    
+    if(response?.token?.length > 10) {
+      navigate('/');        
+    } else if(activeTab === 0) {
+      setResponseMsg(t('login.loginFailed'));
+    } else {
+      setResponseMsg(t('login.signinFailed'));
+    }        
+    setEmail('');
+    setPassword1('');
+    setPassword2('');
   }
 
   return (<div className={styles.container}><div className={styles.content}>
