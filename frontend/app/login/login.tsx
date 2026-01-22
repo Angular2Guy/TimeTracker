@@ -56,6 +56,10 @@ export function Login() {
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);
 
+  useEffect(() => {
+    i18n.changeLanguage(language).then();    
+  }, [language]);
+
   const handleChangeEmail: ChangeEventHandler<HTMLInputElement> = (event) => {
     setEmail(event.currentTarget.value as string);
   };
@@ -93,7 +97,7 @@ export function Login() {
   };
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
+    event.preventDefault();    
         if(!!controller) {
       controller.abort();
     }

@@ -14,7 +14,7 @@ import { atom } from "jotai";
 
 const GlobalState = {
     jwtToken: atom(''),
-    roles: atom<string[]>([]),
+    roles: atom<string[]>([]),    
 };
 
 export default GlobalState;
