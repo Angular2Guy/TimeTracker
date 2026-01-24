@@ -63,10 +63,13 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       throw new Error('Invalid password');
     }
     const payload = {
-      sub: user.email,
-      roles: user.role.split(',').map(role => role.trim()),
-      email: user.email,
+      Username: user.email,
+      Subject: 'TimeTracking',
+      Roles: user.role.split(',').map(role => role.trim()),
+      Issuer: 'TimeTracker',
+      IssuedAt: new Date(Date.now()).toISOString(),
+      Expiration: new Date(Date.now() + (60 * 1000)).toISOString(), 
     } as TokenPayload;    
-    return { token: this.jwtService.sign(payload), roles: payload.roles };
+    return { token: this.jwtService.sign(payload), roles: payload.Roles };
   }
 }

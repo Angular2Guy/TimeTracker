@@ -11,7 +11,10 @@
    limitations under the License.
  */
 export interface TokenPayload {
-  sub: string;
-  email: string;
-  roles: string[];
+  Issuer: string;
+  IssuedAt: string;
+  Expiration: string;  
+  Subject: string;
+  Username: string;
+  Roles: string[];
 }

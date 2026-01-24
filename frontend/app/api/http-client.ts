@@ -15,6 +15,8 @@ import type { LoginRequest, LoginResponse } from "~/model/login";
 
 const apiPrefix = '/rest';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 async function handleResponse<T>(response: Response,navigate: NavigateFunction): Promise<T> {
   if (!response.ok) {
     const error = await response.text();
@@ -26,13 +28,13 @@ async function handleResponse<T>(response: Response,navigate: NavigateFunction):
 
 export const postLogin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
   const requestOptions = loginSigninOptions(email, password1, controller);
-  const result = await fetch(`${apiPrefix}/login/login`, requestOptions);
+  const result = await fetch(`${apiUrl}${apiPrefix}/login/login`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);
 }
 
 export const postSignin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
   const requestOptions = loginSigninOptions(email, password1, controller);
-  const result = await fetch(`${apiPrefix}/login/signin`, requestOptions);
+  const result = await fetch(`${apiUrl}${apiPrefix}/login/signin`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);
 }
 
