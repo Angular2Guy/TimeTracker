@@ -111,9 +111,11 @@ export function Login() {
       navigate('/');        
     } else if(activeTab === 0) {
       setResponseMsg(t('login.loginFailed'));
-    } else {
+    } else if(activeTab === 1 && response?.token?.length <= 1) {
       setResponseMsg(t('login.signinFailed'));
-    }        
+    }  else {
+      setActiveTab(0);
+    }
     setEmail('');
     setPassword1('');
     setPassword2('');

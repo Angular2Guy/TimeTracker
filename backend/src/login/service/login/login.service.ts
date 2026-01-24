@@ -47,8 +47,10 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       email: signinRequest.email,
       password: hashedPassword,
       role: UserRole.USER,
-      disabled: false
-    });
+      disabled: false,
+      createdBy: signinRequest.email.split('@')[0],
+      lastChangedBy: signinRequest.email.split('@')[0],
+    } as User);
     await this.usersRepository.save(newUser);
     return '';
   }

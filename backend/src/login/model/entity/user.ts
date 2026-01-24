@@ -11,13 +11,14 @@
    limitations under the License.
  */
 import { BaseEntity } from "../../../common/model/entity/base";
-import {Column } from "typeorm";
+import {Column, Entity } from "typeorm";
 
 export enum UserRole {
     USER = 'user',
     ADMIN = 'admin',
   }
 
+@Entity()
 export class User extends BaseEntity {  
     @Column({type: 'varchar', length: 100})
     email: string;
