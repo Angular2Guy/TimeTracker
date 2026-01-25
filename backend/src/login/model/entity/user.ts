@@ -10,16 +10,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { BaseEntity } from "../../../common/model/entity/base";
-import {Column, Entity } from "typeorm";
+import { TimeAccount } from "src/account/model/entity/time-account";
+import { TTBaseEntity } from "../../../common/model/entity/base";
+import {Column, Entity, ManyToOne } from "typeorm";
 
 export enum UserRole {
     USER = 'user',
+    PM = 'pm',
     ADMIN = 'admin',
   }
 
 @Entity()
-export class User extends BaseEntity {  
+export class User extends TTBaseEntity {  
     @Column({type: 'varchar', length: 100})
     email: string;
 
@@ -31,4 +33,7 @@ export class User extends BaseEntity {
 
     @Column({type: 'boolean'})
     disabled: boolean;
+
+    @ManyToOne(() => TimeAccount, (timeAccount) => timeAccount.users)
+    timeAccount: TimeAccount;
 }

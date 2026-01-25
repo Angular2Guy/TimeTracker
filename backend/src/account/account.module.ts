@@ -10,16 +10,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { databaseProvidersKey } from '../../../common/config/database.providers';
-import { DataSource } from "typeorm";
-import { User } from './user';
+import { Module } from "@nestjs/common";
+import { CommonModule } from "../common/common.module";
 
-export const userRepoKey = 'USER_REPOSITORY';
-
-export const userProviders = [
-  {
-    provide: userRepoKey,
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(User),
-    inject: [databaseProvidersKey],
-    },
-];
+@Module({imports: [CommonModule]})
+export class AccountModule {}

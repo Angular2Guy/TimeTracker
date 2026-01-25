@@ -10,15 +10,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { databaseProvidersKey } from '../../../common/config/database.providers';
+import { databaseProvidersKey } from "../../../common/config/database.providers";
+import { User } from "../../../login/model/entity/user";
 import { DataSource } from "typeorm";
-import { User } from './user';
 
-export const userRepoKey = 'USER_REPOSITORY';
+export const timeAccountRepoKey = 'TIME_ACCOUNT_REPOSITORY';
 
-export const userProviders = [
+export const timeAccountProviders = [
   {
-    provide: userRepoKey,
+    provide: timeAccountRepoKey,
     useFactory: (dataSource: DataSource) => dataSource.getRepository(User),
     inject: [databaseProvidersKey],
     },

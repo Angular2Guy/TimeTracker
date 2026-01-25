@@ -11,16 +11,26 @@
    limitations under the License.
  */
 import { TTBaseEntity } from "../../../common/model/entity/base";
-import { Column, Entity } from "typeorm";
+import { User } from "../../../login/model/entity/user";
+import {  Column, Entity, OneToMany } from "typeorm";
 
 @Entity()
-export class TimeEntry extends TTBaseEntity {
-    @Column({type: 'varchar', length: 100})
-    comment: string;
+export class TimeAccount extends TTBaseEntity {
+    @Column({type: 'varchar', length: 50})
+    name: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'varchar', length: 100})
+    description: string;
+
+    @Column({type: 'int64'})
     duration: number; // duration in minutes
 
     @Column({type: 'timestamptz'})
-    entryDate: Date;
+    startDate: Date;
+
+    @Column({type: 'timestamptz'})
+    endDate: Date;
+
+    @OneToMany(() => User, (user) => user.timeAccount)
+    users: User[]   
 }
