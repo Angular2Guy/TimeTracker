@@ -21,7 +21,7 @@ interface SideBarProps {
   toolbarTitle?: string;
 }
 
-export default function SideBar({ drawerOpen: openProp = false, toolbarTitle = "Mini variant drawer" }: SideBarProps) {
+export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: toolbarTitleProp = "Missing header title" }: SideBarProps) {
   const [open, setOpen] = React.useState(openProp);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function SideBar({ drawerOpen: openProp = false, toolbarTitle = "
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            {toolbarTitle}
+            {toolbarTitleProp}
           </Typography>
         </Toolbar>
       </AppBar>  
