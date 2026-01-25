@@ -13,7 +13,7 @@
 import { Module } from "@nestjs/common";
 import { CommonModule } from "../common/common.module";
 import { AccountService } from "./service/account.service";
+import { AccountController } from './controller/account.controller';
 
-
-@Module({imports: [CommonModule], providers: [AccountService]})
+@Module({imports: [CommonModule], providers: [AccountService], controllers: [AccountController]})
 export class AccountModule {}

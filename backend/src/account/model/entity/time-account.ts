@@ -22,7 +22,7 @@ export class TimeAccount extends TTBaseEntity {
     @Column({type: 'varchar', length: 100})
     description: string;
 
-    @Column({type: 'int64'})
+    @Column({type: 'bigint'})
     duration: number; // duration in minutes
 
     @Column({type: 'timestamptz'})
