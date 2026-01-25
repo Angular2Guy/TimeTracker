@@ -12,6 +12,8 @@
  */
 import { Module } from "@nestjs/common";
 import { CommonModule } from "../common/common.module";
+import { AccountService } from "./service/account.service";
 
-@Module({imports: [CommonModule]})
+
+@Module({imports: [CommonModule], providers: [AccountService]})
 export class AccountModule {}
