@@ -31,6 +31,9 @@ export class User extends TTBaseEntity {
     @Column({type: 'varchar', length: 50})
     role: UserRole;
 
+    @Column({type: 'varchar', length: 50})
+    uuid: string;
+    
     @Column({type: 'boolean'})
     disabled: boolean;
 

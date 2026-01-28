@@ -16,6 +16,7 @@ import { LoginRequest, LoginResponse } from 'src/login/model/dto/login';
 import { User, UserRole } from 'src/login/model/entity/user';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
+import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { userRepoKey } from '../../model/entity/user.providers';
 import { TokenPayload } from 'src/common/model/dto/token';
@@ -48,6 +49,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       password: hashedPassword,
       role: UserRole.USER,
       disabled: false,
+      uuid: uuidv4(),
       createdBy: signinRequest.email.split('@')[0],
       lastChangedBy: signinRequest.email.split('@')[0],
     } as User);
@@ -56,7 +58,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
   }
 
   public async login(loginRequest: LoginRequest): Promise<LoginResponse> {
-    const user = await this.usersRepository.findOneBy({email: loginRequest.email});
+    let user = await this.usersRepository.findOneBy({email: loginRequest.email});
     if (!user || user.disabled) {
       throw new Error('invalid user');
     }
@@ -64,8 +66,13 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
     if (!isPasswordValid) {
       throw new Error('Invalid password');
     }
+    if(!user.uuid) {
+      user.uuid = uuidv4();
+      user = await this.usersRepository.save(user);
+    }
     const payload = {
-      Username: user.email,
+      Username: user.email.split('@')[0],
+      Uuid: user.uuid,
       Subject: 'TimeTracking',
       Roles: user.role.split(',').map(role => role.trim()),
       Issuer: 'TimeTracker',

@@ -31,6 +31,9 @@ export class TimeAccount extends TTBaseEntity {
     @Column({type: 'timestamptz'})
     endDate: Date;
 
+    @Column({type: 'varchar', length: 50})
+    managerId: string;
+
     @OneToMany(() => User, (user) => user.timeAccount)
     users: User[]   
 }

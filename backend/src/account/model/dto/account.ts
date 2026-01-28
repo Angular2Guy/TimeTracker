@@ -10,12 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export interface TokenPayload {
-  Issuer: string;
-  IssuedAt: string;
-  Expiration: string;  
-  Subject: string;
-  Username: string;
-  Uuid: string;
-  Roles: string[];
+export interface AccountDto {
+    id?: string;
+    name: string;
+    description: string;
+    duration: number; // duration in minutes
+    startDate: Date;
+    endDate: Date;
+    managerId: string;
+    userIds: string[];
 }
