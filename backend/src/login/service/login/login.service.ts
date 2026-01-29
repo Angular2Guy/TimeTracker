@@ -47,6 +47,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
     const newUser = this.usersRepository.create({
       email: signinRequest.email,
       password: hashedPassword,
+      username: signinRequest.username,
       role: UserRole.USER,
       disabled: false,
       uuid: uuidv4(),
@@ -71,7 +72,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       user = await this.usersRepository.save(user);
     }
     const payload = {
-      Username: user.email.split('@')[0],
+      Username: user.username,
       Uuid: user.uuid,
       Subject: 'TimeTracking',
       Roles: user.role.split(',').map(role => role.trim()),
