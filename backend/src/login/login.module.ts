@@ -17,10 +17,11 @@ import { LoginService } from './service/login/login.service';
 import { userProviders } from './model/entity/user.providers';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { UserController } from './controller/user.controller';
 
 @Module({imports: [CommonModule,PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'supersecret',
       signOptions: { expiresIn: '1m' },
-    }),],controllers: [LoginController], providers: [LoginService, ...userProviders]})
+    }),],controllers: [LoginController, UserController], providers: [LoginService, ...userProviders]})
 export class LoginModule {}
