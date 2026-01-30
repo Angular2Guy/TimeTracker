@@ -27,22 +27,22 @@ async function handleResponse<T>(response: Response,navigate: NavigateFunction):
 }
 
 export const postLogin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
-  const requestOptions = loginSigninOptions(email, password1, controller);
+  const requestOptions = loginSigninOptions(email, '', password1, controller);
   const result = await fetch(`${apiUrl}${apiPrefix}/login/login`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);
 }
 
-export const postSignin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
-  const requestOptions = loginSigninOptions(email, password1, controller);
+export const postSignin = async function (email: string, username: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
+  const requestOptions = loginSigninOptions(email, username, password1, controller);
   const result = await fetch(`${apiUrl}${apiPrefix}/login/signin`, requestOptions);
   return handleResponse<LoginResponse>(result, null as unknown as NavigateFunction);
 }
 
-const loginSigninOptions = (email: string, password1: string, controller: AbortController | null) => {
+const loginSigninOptions = (email: string, username: string, password1: string, controller: AbortController | null) => {
   return {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email, password: password1 } as LoginRequest),
+    body: JSON.stringify({ email: email, username: username, password: password1 } as LoginRequest),
     signal: controller?.signal
   };
 };

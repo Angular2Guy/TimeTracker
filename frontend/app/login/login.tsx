@@ -48,6 +48,7 @@ export function Login() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();  
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [activeTab, setActiveTab] = useState(0);  
@@ -59,9 +60,12 @@ export function Login() {
   useEffect(() => {
     i18n.changeLanguage(language).then();    
   }, [language]);
-
+  
   const handleChangeEmail: ChangeEventHandler<HTMLInputElement> = (event) => {
     setEmail(event.currentTarget.value as string);
+  };
+  const handleChangeUsername: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setUsername(event.currentTarget.value as string);
   };
   const handleChangePassword1: ChangeEventHandler<HTMLInputElement> = (event) => {
     setPassword1(event.currentTarget.value as string);
@@ -73,6 +77,7 @@ export function Login() {
   const handleCancel = (event: FormEvent) => {
     event.preventDefault();
     setEmail('');
+    setUsername('');
     setPassword1('');
     setPassword2('');
     setResponseMsg('');
@@ -103,7 +108,7 @@ export function Login() {
     }
     setResponseMsg('');
     controller = new AbortController();
-    const response = activeTab === 0 ? await postLogin(email, password1, controller) : await postSignin(email, password1, controller);
+    const response = activeTab === 0 ? await postLogin(email, password1, controller) : await postSignin(email, username, password1, controller);
     controller = null;
     setGlobalJwtTokenState(response.token);
     setGlobalRolesState(response.roles);    
@@ -117,6 +122,7 @@ export function Login() {
       setActiveTab(0);
     }
     setEmail('');
+    setUsername('');
     setPassword1('');
     setPassword2('');
   }
@@ -195,6 +201,17 @@ export function Login() {
             onChange={handleChangeEmail}
             id="email"
             label={t('login.email')}
+            type="string"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            value={username}
+            onChange={handleChangeUsername}
+            id="username"
+            label={t('login.username')}
             type="string"
             fullWidth
             variant="standard"
