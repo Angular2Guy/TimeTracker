@@ -10,21 +10,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Controller, Get } from '@nestjs/common';
-import { UserService } from '../service/user.service';
-import { UserDto } from '../model/dto/user-dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UserService } from './user.service';
 
-@Controller('/rest/user')
-export class UserController {
-    constructor(private userService: UserService) { }
+describe('UserService', () => {
+  let service: UserService;
 
-    @Get('/all')
-    public async getAllUsers(): Promise<UserDto[]> {
-        return (await this.userService.getAllUsers()).map(user => ({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            uuid: user.uuid
-        } as UserDto));
-    }
-}
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [UserService],
+    }).compile();
+
+    service = module.get<UserService>(UserService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});

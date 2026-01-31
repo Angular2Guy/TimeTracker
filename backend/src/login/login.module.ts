@@ -13,15 +13,16 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from 'src/common/common.module';
 import { LoginController } from './controller/login.controller';
-import { LoginService } from './service/login/login.service';
+import { LoginService } from './service/login.service';
 import { userProviders } from './model/entity/user.providers';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UserController } from './controller/user.controller';
+import { UserService } from './service/user.service';
 
 @Module({imports: [CommonModule,PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'supersecret',
       signOptions: { expiresIn: '1m' },
-    }),],controllers: [LoginController, UserController], providers: [LoginService, ...userProviders]})
+    }),],controllers: [LoginController, UserController], providers: [LoginService, ...userProviders, UserService]})
 export class LoginModule {}

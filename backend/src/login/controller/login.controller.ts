@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Body, Controller, Post } from '@nestjs/common';
-import { LoginService } from '../service/login/login.service';
+import { LoginService } from '../service/login.service';
 import type { LoginRequest, LoginResponse } from '../model/dto/login';
 import { Public } from '../../common/security/public.decorator';
 

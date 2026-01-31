@@ -10,21 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Controller, Get } from '@nestjs/common';
-import { UserService } from '../service/user.service';
-import { UserDto } from '../model/dto/user-dto';
-
-@Controller('/rest/user')
-export class UserController {
-    constructor(private userService: UserService) { }
-
-    @Get('/all')
-    public async getAllUsers(): Promise<UserDto[]> {
-        return (await this.userService.getAllUsers()).map(user => ({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            uuid: user.uuid
-        } as UserDto));
-    }
+export interface UserDto {
+  id: string;
+  email: string;
+  username: string;
+  uuid: string;
 }

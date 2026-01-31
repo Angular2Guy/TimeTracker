@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { timeAccountRepoKey } from '../model/entity/time-account.providers';
 import { TimeAccount } from '../model/entity/time-account';
 import { Repository } from 'typeorm';
-import { AccountDto } from '../model/dto/account';
+import { AccountDto } from '../model/dto/account-dto';
 
 @Injectable()
 export class AccountService {

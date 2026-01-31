@@ -11,6 +11,7 @@
     "login": {     
         "email": "EMail",
         "password": "Password",
+        "username": "Username",
         "login": "Login",
         "signin": "Sign In"
     }

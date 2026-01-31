@@ -10,21 +10,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Controller, Get } from '@nestjs/common';
-import { UserService } from '../service/user.service';
-import { UserDto } from '../model/dto/user-dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { User } from '../model/entity/user';
+import { userRepoKey } from '../model/entity/user.providers';
 
-@Controller('/rest/user')
-export class UserController {
-    constructor(private userService: UserService) { }
+@Injectable()
+export class UserService {
+    constructor(@Inject(userRepoKey) private usersRepository: Repository<User>) { }
 
-    @Get('/all')
-    public async getAllUsers(): Promise<UserDto[]> {
-        return (await this.userService.getAllUsers()).map(user => ({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            uuid: user.uuid
-        } as UserDto));
+    public async getAllUsers(): Promise<User[]> {
+        const users = await this.usersRepository.find();
+        return users;
     }
 }

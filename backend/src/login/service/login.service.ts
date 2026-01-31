@@ -18,7 +18,7 @@ import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
-import { userRepoKey } from '../../model/entity/user.providers';
+import { userRepoKey } from '../model/entity/user.providers';
 import { TokenPayload } from 'src/common/model/dto/token';
 
 @Injectable()
