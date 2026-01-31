@@ -10,12 +10,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import type { Route } from "../+types/root";
+import { UserReports } from "~/reports/user-reports";
 
-export default [
-  index("routes/home.tsx"),
-  route("login", "routes/login-signin.tsx"),
-  route("accounts", "routes/accounts.tsx"),
-  route("tracktime", "routes/track-time.tsx"),
-  route("reports", "routes/reports.tsx"),
-] satisfies RouteConfig;
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "User Reports" },
+    { name: "description", content: "User reports in TimeTracker" },
+  ];
+}
+
+export default function Reports() {
+  return (
+    <UserReports />
+  );
+}

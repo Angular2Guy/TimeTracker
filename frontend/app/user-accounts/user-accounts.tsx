@@ -15,16 +15,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
-import styles from './time-accounts.module.css';
+import styles from './user-accounts.module.css';
 
-export function TimeAccounts() {
+export function UserAccounts() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
 
   return (    
-  <div><SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts"/>
-  <div className={styles.first}>TimeAccounts Page</div>
+    <div>
+  <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
+  <div className={styles.first}>User Accounts Page</div>
   </div>
   );
 }

@@ -15,6 +15,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 interface SideBarProps {
   drawerOpen?: boolean;
@@ -23,6 +24,7 @@ interface SideBarProps {
 
 export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: toolbarTitleProp = "Missing header title" }: SideBarProps) {
   const [open, setOpen] = React.useState(openProp);
+  const navigate = useNavigate();  
 
   useEffect(() => {
     setOpen(openProp);
@@ -32,33 +34,21 @@ export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: to
     setOpen(newOpen);
   };
 
+  const openAccounts = () => navigate('/accounts');
+  const openTrackTime = () => navigate('/tracktime');
+  const openReports = () => navigate('/reports');
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Accounts', 'Track Time', 'Reports'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+            <ListItemButton onClick={index === 0 ? openAccounts : index === 1 ? openTrackTime : openReports}>              
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      </List>      
     </Box>
   );
 

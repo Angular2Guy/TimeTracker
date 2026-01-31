@@ -14,6 +14,7 @@ import { Controller, Get } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { UserDto } from '../model/dto/user-dto';
 
+//@Public()
 @Controller('/rest/user')
 export class UserController {
     constructor(private userService: UserService) { }

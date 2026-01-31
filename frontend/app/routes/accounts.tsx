@@ -10,18 +10,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { TimeAccounts } from "~/time-accounts/time-accounts";
 import type { Route } from "../+types/root";
+import { UserAccounts } from "~/user-accounts/user-accounts";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Login" },
-    { name: "description", content: "Login to TimeTracker" },
+    { title: "User Accounts" },
+    { name: "description", content: "Manage user accounts in TimeTracker" },
   ];
 }
 
-export default function LoginSignin() {
+export default function Accounts() {
   return (
-    <TimeAccounts />
+    <UserAccounts />
   );
 }

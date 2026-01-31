@@ -10,12 +10,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
-
-export default [
-  index("routes/home.tsx"),
-  route("login", "routes/login-signin.tsx"),
-  route("accounts", "routes/accounts.tsx"),
-  route("tracktime", "routes/track-time.tsx"),
-  route("reports", "routes/reports.tsx"),
-] satisfies RouteConfig;
+ .first {
+    margin-top: 64px;
+ }
