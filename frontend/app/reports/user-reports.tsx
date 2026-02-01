@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './user-reports.module.css';
+import type { UserDto } from "~/model/user";
 
 export function UserReports() {
   const navigate = useNavigate();

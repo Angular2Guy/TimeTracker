@@ -11,16 +11,34 @@
    limitations under the License.
  */
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
+import type { UserDto } from "~/model/user";
+import { get } from "http";
+import { getUsers } from "~/api/http-client";
 
 export function UserAccounts() {
+  let controller: AbortController | null = null;    
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
+  const [users, setUsers] = useState([] as UserDto[]);
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
+  const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);  
+
+  useEffect(() => {
+    if(!!controller) {
+      controller.abort();
+    }
+    controller = new AbortController();
+    getUsers(globalJwtTokenState, controller).then((data) => {
+      setUsers(data);
+    }).catch((error) => {
+      console.error('Error fetching users:', error);
+    });
+  }, [users]);
 
   return (    
     <div>
