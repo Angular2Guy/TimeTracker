@@ -44,6 +44,9 @@ export function UserAccounts() {
     <div>
   <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
   <div className={styles.first}>User Accounts Page</div>
+  {users.map((user) => (
+    <div>Username: {user?.username}, Email: {user?.email}</div>
+  ))}
   </div>
   );
 }
