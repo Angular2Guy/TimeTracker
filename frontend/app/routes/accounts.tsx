@@ -20,7 +20,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Accounts() {
+export default function Accounts() {  
   return (
     <UserAccounts />
   );

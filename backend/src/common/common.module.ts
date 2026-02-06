@@ -11,10 +11,23 @@
    limitations under the License.
  */
 import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { v4 as uuidv4 } from 'uuid';
 import { databaseProviders } from './config/database.providers';
+import { JwtStrategy } from './security/jwt.strategy';
+
+export const defaultSecret = process.env.JWT_SECRET ?? uuidv4();
 
 @Module({
-  providers: [...databaseProviders],
-  exports: [...databaseProviders],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: defaultSecret,
+      signOptions: { expiresIn: '24h' },
+    }),
+  ],
+  providers: [...databaseProviders, JwtStrategy],
+  exports: [...databaseProviders, PassportModule, JwtModule],
 })
 export class CommonModule {}

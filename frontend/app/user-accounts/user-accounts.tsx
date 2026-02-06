@@ -11,41 +11,41 @@
    limitations under the License.
  */
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
 import type { UserDto } from "~/model/user";
-import { get } from "http";
 import { getUsers } from "~/api/http-client";
 
 export function UserAccounts() {
-  let controller: AbortController | null = null;    
+  let controller = useRef<AbortController | null>(null);    
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
   const [users, setUsers] = useState([] as UserDto[]);
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
-  const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);  
+  const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);    
 
-  useEffect(() => {
-    if(!!controller) {
-      controller.abort();
+  useEffect(() => {       
+    if(!!controller.current) {
+      return;
+      //controller.current.abort();
     }
-    controller = new AbortController();
-    getUsers(globalJwtTokenState, controller).then((data) => {
+    controller.current = new AbortController();
+    getUsers(globalJwtTokenState, controller.current).then((data) => {      
       setUsers(data);
     }).catch((error) => {
       console.error('Error fetching users:', error);
     });
-  }, [users]);
+  }, []);
 
   return (    
     <div>
   <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
   <div className={styles.first}>User Accounts Page</div>
   {users.map((user) => (
-    <div>Username: {user?.username}, Email: {user?.email}</div>
+    <div key={user?.id}>Username: {user?.username}, Email: {user?.email}</div>
   ))}
   </div>
   );
