@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { useAtom } from "jotai";
-import { useEffect, useState, type BaseSyntheticEvent, type ChangeEventHandler, type FormEvent } from "react";
+import { useEffect, useRef, useState, type BaseSyntheticEvent, type ChangeEventHandler, type FormEvent } from "react";
 import { Dialog, DialogContent, Button, Tabs, Tab, Box, TextField, type SelectChangeEvent, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from "react-router";
 import { postLogin, postSignin } from "~/api/http-client";
@@ -44,7 +44,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export function Login() {
-  let controller: AbortController | null = null;  
+  let controller = useRef<AbortController | null>(null);  
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();  
   const [email, setEmail] = useState('');
@@ -103,13 +103,13 @@ export function Login() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();    
-        if(!!controller) {
-      controller.abort();
+    if(!!controller.current) {
+      controller.current.abort();
     }
     setResponseMsg('');
-    controller = new AbortController();
-    const response = activeTab === 0 ? await postLogin(email, password1, controller) : await postSignin(email, username, password1, controller);
-    controller = null;
+    controller.current = new AbortController();
+    const response = activeTab === 0 ? await postLogin(email, password1, controller.current) : await postSignin(email, username, password1, controller.current);
+    //controller.current = null;
     setGlobalJwtTokenState(response.token);
     setGlobalRolesState(response.roles);    
     if(response?.token?.length > 10) {
