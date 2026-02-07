@@ -10,9 +10,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+export enum UserRole {
+    USER = 'user',
+    PM = 'pm',
+    ADMIN = 'admin',
+  }
+
 export interface UserDto {
   id: string;
   email: string;
+  roles: string[];
   username: string;
   uuid: string;
 }

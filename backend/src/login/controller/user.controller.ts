@@ -24,6 +24,7 @@ export class UserController {
         return (await this.userService.getAllUsers()).map(user => ({
             id: user.id,
             username: user.username,
+            roles: user.role.split(',').map(role => role.trim()),
             email: user.email,
             uuid: user.uuid
         } as UserDto));

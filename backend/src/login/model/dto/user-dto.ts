@@ -13,6 +13,7 @@
 export interface UserDto {
   id: string;
   email: string;
+  roles: string[];
   username: string;
   uuid: string;
 }
