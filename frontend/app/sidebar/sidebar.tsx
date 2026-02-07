@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
-import { useAtom } from "jotai/react/useAtom";
+import { useAtom } from "jotai";
 import { UserRole } from "~/model/user";
 
 interface SideBarProps {
