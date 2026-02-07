@@ -18,18 +18,21 @@ import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/http-client";
-import { Autocomplete, Box, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 export function UserAccounts() {
   let controller = useRef<AbortController | null>(null);    
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
   const [users, setUsers] = useState([] as UserDto[]);
+  const [selectedUsers, setSelectedUsers] = useState([] as UserDto[]);
+  const [selectedUser, setSelectedUser] = useState(null as UserDto | null);
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);    
 
   useEffect(() => {       
-    if(!!controller.current) {
+    if(!!controller.current && users.length > 0) {
       return;
       //controller.current.abort();
     }
@@ -44,17 +47,29 @@ export function UserAccounts() {
   return (    
     <div>
   <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
-  <div className={styles.first}>User Accounts Page</div>  
-  {/* 
-  users.map((user) => (
+  <div className={styles.first}>User: {selectedUser?.username}</div>  
+  <div>
+  {selectedUsers.map((user) => (
     <div key={user?.id}>Username: {user?.username}, Email: {user?.email}</div>
-  ))
-  */}    
+  ))}  
+  </div>
+  <div>
   <Autocomplete
       id="country-select-demo"
       sx={{ width: 300 }}
       options={users}
       autoHighlight
+      onChange={(event: Event, value: UserDto | null) => {        
+        setSelectedUser(value);
+      }}
+      onKeyDown={(event) => {
+    if (event.key === 'Enter') {      
+      event.defaultMuiPrevented = true;
+      if (selectedUser) {
+        setSelectedUsers(selectedUsers.concat(selectedUser));
+        setSelectedUser(null);
+      }
+    }}}
       getOptionLabel={(option) => option.username}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;
@@ -82,6 +97,27 @@ export function UserAccounts() {
         />
       )}
     />
+     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <ListItem>
+        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+        <ListItemAvatar>          
+            <CloseIcon />       
+        </ListItemAvatar>
+      </ListItem>
+      <ListItem>
+        <ListItemText primary="Work" secondary="Jan 7, 2014" />
+        <ListItemAvatar>        
+            <CloseIcon />      
+        </ListItemAvatar>
+      </ListItem>
+      <ListItem>
+        <ListItemText primary="Vacation" secondary="July 20, 2014" />
+        <ListItemAvatar>          
+            <CloseIcon />
+        </ListItemAvatar>
+      </ListItem>
+    </List>
+    </div>
   </div>
   );
 }
