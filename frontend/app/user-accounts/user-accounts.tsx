@@ -18,6 +18,7 @@ import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/http-client";
+import { Autocomplete, Box, TextField } from "@mui/material";
 
 export function UserAccounts() {
   let controller = useRef<AbortController | null>(null);    
@@ -43,10 +44,44 @@ export function UserAccounts() {
   return (    
     <div>
   <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
-  <div className={styles.first}>User Accounts Page</div>
-  {users.map((user) => (
+  <div className={styles.first}>User Accounts Page</div>  
+  {/* 
+  users.map((user) => (
     <div key={user?.id}>Username: {user?.username}, Email: {user?.email}</div>
-  ))}
+  ))
+  */}    
+  <Autocomplete
+      id="country-select-demo"
+      sx={{ width: 300 }}
+      options={users}
+      autoHighlight
+      getOptionLabel={(option) => option.username}
+      renderOption={(props, option) => {
+        const { key, ...optionProps } = props;
+        return (
+          <Box
+            key={key}
+            component="li"
+            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+            {...optionProps}
+          >            
+            {option.username}
+          </Box>
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Choose a user"
+          slotProps={{
+            htmlInput: {
+              ...params.inputProps,
+              autoComplete: 'new-password', // disable autocomplete and autofill
+            },
+          }}
+        />
+      )}
+    />
   </div>
   );
 }
