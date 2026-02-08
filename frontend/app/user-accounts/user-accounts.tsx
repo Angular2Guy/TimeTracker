@@ -65,7 +65,7 @@ export function UserAccounts() {
     if (event.key === 'Enter') {      
       event.defaultMuiPrevented = true;
       if (selectedUser) {
-        setSelectedUsers(selectedUsers.concat(selectedUser));
+        setSelectedUsers(selectedUsers.filter(u => u.id !== selectedUser.id).concat(selectedUser));
         setSelectedUser(null);
       }
     }}}
