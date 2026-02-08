@@ -13,3 +13,7 @@
  .first {
     margin-top: 64px;
  }
+
+ .base-container {
+    display: flex;  
+ }

@@ -50,8 +50,8 @@ export function UserAccounts() {
 
   return (    
     <div>
-  <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>
-  <div className={styles.first}>User: {selectedUser?.username}</div>  
+  <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>  
+  <div className={[styles.first].join(' ')}>
   <div>
   <Autocomplete
       id="country-select-demo"
@@ -99,13 +99,17 @@ export function UserAccounts() {
      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       {selectedUsers.map((user) => (
         <ListItem key={user.id}>
-          <ListItemText primary={user.username} secondary={user.email} />
+          <ListItemText primary={user.username} />
           <ListItemAvatar>          
             <CloseIcon onClick={() => removeUserFromSelectedUsers(user)} />       
         </ListItemAvatar>
         </ListItem>           
       ))}
     </List>
+    </div>
+    <div>
+      Main
+      </div>
     </div>
   </div>
   );
