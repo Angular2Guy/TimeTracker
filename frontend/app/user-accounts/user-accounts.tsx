@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { useAtom } from "jotai";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type SyntheticEvent } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
@@ -58,7 +58,7 @@ export function UserAccounts() {
       sx={{ width: 300 }}
       options={users}
       autoHighlight
-      onChange={(event: Event, value: UserDto | null) => {        
+      onChange={(event: SyntheticEvent, value: UserDto | null) => {        
         setSelectedUser(value);
       }}
       onKeyDown={(event) => {
