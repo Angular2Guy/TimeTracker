@@ -20,6 +20,7 @@ import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/http-client";
 import { Autocomplete, Avatar, Box, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
 
 export function UserAccounts() {
   let controller = useRef<AbortController | null>(null);    
@@ -34,6 +35,26 @@ export function UserAccounts() {
   const removeUserFromSelectedUsers = (user: UserDto) => {
     setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
   }
+
+ var tabledata = [
+ 	{id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
+ 	{id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
+ 	{id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
+ 	{id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
+ 	{id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
+ ];
+
+ const table = new Tabulator("#example-table", {
+ 	height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+ 	data:tabledata, //assign data to table
+ 	layout:"fitColumns", //fit columns to width of table (optional)
+ 	columns:[ //Define Table Columns
+	 	{title:"Name", field:"name", width:150},
+	 	{title:"Age", field:"age", hozAlign:"left", formatter:"progress"},
+	 	{title:"Favourite Color", field:"col"},
+	 	{title:"Date Of Birth", field:"dob", sorter:"date", hozAlign:"center"},
+ 	],
+});
 
   useEffect(() => {       
     if(!!controller.current && users.length > 0) {
@@ -108,7 +129,7 @@ export function UserAccounts() {
     </List>
     </div>
     <div>
-      Main
+      <div id="example-table"></div>
       </div>
     </div>
   </div>
