@@ -32,7 +32,7 @@ export class TimeAccount extends TTBaseEntity {
     endDate: Date;
 
     @Column({type: 'varchar', length: 50})
-    managerId: User;
+    managerId: string;
 
     @OneToMany(() => User, (user) => user.timeAccount)
     users: User[]   
