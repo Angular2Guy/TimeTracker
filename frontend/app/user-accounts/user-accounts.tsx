@@ -17,7 +17,7 @@ import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
 import type { UserDto } from "~/model/user";
-import { getUsers } from "~/api/http-client";
+import { getUsers } from "~/api/user-service";
 import { Autocomplete, Avatar, Box, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';

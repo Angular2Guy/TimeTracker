@@ -10,15 +10,14 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-import { useNavigate, type NavigateFunction } from "react-router";
+import { useNavigate } from "react-router";
 import type { LoginRequest, LoginResponse } from "~/model/login";
-import type { UserDto } from "~/model/user";
 
-const apiPrefix = '/rest';
+export const apiPrefix = '/rest';
 
-const apiUrl = import.meta.env.VITE_API_URL;
+export const apiUrl = import.meta.env.VITE_API_URL;
 
-async function handleResponse<T>(response: Response): Promise<T> {
+export async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.text();
     const navigate = useNavigate();
@@ -45,23 +44,6 @@ const loginSigninOptions = (email: string, username: string, password1: string, 
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email, username: username, password: password1 } as LoginRequest),
-    signal: controller?.signal
-  };
-};
-
-export const getUsers = async (jwtToken: string, controller: AbortController | null) => {
-  const requestOptions = getOptions(jwtToken, controller);
-  const result = await fetch(`${apiUrl}${apiPrefix}/user/all`, requestOptions);
-  return handleResponse<UserDto[]>(result);
-}
-
-const getOptions = (jwtToken: string, controller: AbortController | null) => {
-  return {
-    method: 'GET',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
-    }, 
     signal: controller?.signal
   };
 };
