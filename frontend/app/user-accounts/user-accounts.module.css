@@ -11,9 +11,13 @@
    limitations under the License.
  */
  .first {
-    margin-top: 64px;
+    /*margin-top: 64px;*/
+    margin-top: 74px;
+    padding: 0 10px 0 10px;
+    width: 100%;
  }
 
- .base-container {
-    display: flex;  
+ .baseContainer {
+    display: flex; 
+    gap: 10px;
  }

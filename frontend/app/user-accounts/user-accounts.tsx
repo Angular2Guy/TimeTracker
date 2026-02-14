@@ -52,23 +52,34 @@ export function UserAccounts() {
  useEffect(() => {
   if (!tableRef.current) return;
 
-  const table = new Tabulator(tableRef.current, {
-    height:205,
-    data:tableData,
-    layout:"fitColumns",
-    columns:[
-      {title:"Name", field:"name", width:150},
-      {title:"Age", field:"age", hozAlign:"left", formatter:"progress"},
-      {title:"Favourite Color", field:"col"},
-      {title:"Date Of Birth", field:"dob", sorter:"date", hozAlign:"center"},
-    ],
-  });
+  // Wait for DOM to be fully ready before initializing Tabulator
+  const timer = setTimeout(() => {
+    if (!tableRef.current) return;
 
-  tableInstanceRef.current = table;
+    try {
+      const table = new Tabulator(tableRef.current, {
+        height: "100%",
+        data: tableData,
+        layout: "fitColumns",
+        //virtualDom: true,
+        columns: [
+          { title: "Name", field: "name", width: 150 },
+          { title: "Age", field: "age", hozAlign: "left", formatter: "progress" },
+          { title: "Favourite Color", field: "col" },
+          { title: "Date Of Birth", field: "dob", sorter: "date", hozAlign: "center" },
+        ],
+      });
+
+      tableInstanceRef.current = table;
+    } catch (e) {
+      console.error("Tabulator initialization error:", e);
+    }
+  }, 0);
 
   return () => {
+    clearTimeout(timer);
     try {
-      table.destroy();
+      tableInstanceRef.current?.destroy();
     } catch (e) {
       // ignore destroy errors
     }
@@ -108,7 +119,7 @@ export function UserAccounts() {
   return (    
     <div>
   <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Accounts"/></div>  
-  <div className={[styles.first].join(' ')}>
+  <div className={[styles.first, styles.baseContainer].join(' ')}>
   <div>
   <Autocomplete
       id="country-select-demo"
@@ -164,9 +175,9 @@ export function UserAccounts() {
       ))}
     </List>
     </div>
-    <div>
-      <div id="example-table" ref={tableRef}></div>
-      </div>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div id="example-table" ref={tableRef} style={{ width: '100%', height: '100%', flex: 1 }}></div>
+    </div>
     </div>
   </div>
   );
