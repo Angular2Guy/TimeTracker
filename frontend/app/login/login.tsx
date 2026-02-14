@@ -56,6 +56,7 @@ export function Login() {
   const [responseMsg, setResponseMsg] = useState('');
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);
+  const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
 
   useEffect(() => {
     i18n.changeLanguage(language).then();    
@@ -112,6 +113,7 @@ export function Login() {
     //controller.current = null;
     setGlobalJwtTokenState(response.token);
     setGlobalRolesState(response.roles);    
+    setGlobalUserIdState(response.userId);
     if(response?.token?.length > 10) {
       navigate('/');        
     } else if(activeTab === 0) {

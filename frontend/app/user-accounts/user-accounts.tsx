@@ -33,21 +33,19 @@ export function UserAccounts() {
   const [selectedUser, setSelectedUser] = useState(null as UserDto | null);
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);    
-
-  const removeUserFromSelectedUsers = (user: UserDto) => {
-    setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
-  }
-
- const [tableData, setTableData] = useState<any[]>([
+  const tableRef = useRef<HTMLDivElement | null>(null);
+  const tableInstanceRef = useRef<any | null>(null);
+  const [tableData, setTableData] = useState<any[]>([
  	{id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
  	{id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
  	{id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
  	{id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
  	{id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
- ]);
+   ]);
 
- const tableRef = useRef<HTMLDivElement | null>(null);
- const tableInstanceRef = useRef<any | null>(null);
+  const removeUserFromSelectedUsers = (user: UserDto) => {
+    setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
+  }
 
  useEffect(() => {
   if (!tableRef.current) return;
@@ -131,10 +129,9 @@ export function UserAccounts() {
       }}
       onKeyDown={(event) => {
     if (event.key === 'Enter') {      
-      event.defaultMuiPrevented = true;
+      event.defaultMuiPrevented = true;      
       if (selectedUser) {
-        setSelectedUsers(selectedUsers.filter(u => u.id !== selectedUser.id).concat(selectedUser));
-        setSelectedUser(null);
+        setSelectedUsers(selectedUsers.filter(u => u.id !== selectedUser.id).concat(selectedUser));        
       }
     }}}
       getOptionLabel={(option) => option.username}

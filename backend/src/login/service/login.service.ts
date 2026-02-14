@@ -80,6 +80,6 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       IssuedAt: new Date(Date.now()).toISOString(),
       Expiration: new Date(Date.now() + (60 * 1000)).toISOString(), 
     } as TokenPayload;    
-    return { token: this.jwtService.sign(payload), roles: payload.Roles };
+    return { token: this.jwtService.sign(payload), roles: payload.Roles, userId: user.uuid };
   }
 }
