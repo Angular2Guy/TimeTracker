@@ -9,7 +9,7 @@ export class AccountService {
     constructor(@Inject(timeAccountRepoKey) private timeAccountRepository: Repository<TimeAccount>) {}
 
     public async getAccountsForManager(managerId: string): Promise<AccountDto[]> {
-        const accountEntities = await this.timeAccountRepository.find({where: {managerId: managerId}, relations: ['users']});
+        const accountEntities = await this.timeAccountRepository.find({where: {managerId: managerId}, relations: {users: true}});
         return accountEntities.map(accountEntity => ({
             id: accountEntity.id,
             name: accountEntity.name,

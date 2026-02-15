@@ -11,15 +11,15 @@
    limitations under the License.
  */
 import { databaseProvidersKey } from "../../../common/config/database.providers";
-import { User } from "../../../login/model/entity/user";
 import { DataSource } from "typeorm";
+import { TimeAccount } from "./time-account";
 
 export const timeAccountRepoKey = 'TIME_ACCOUNT_REPOSITORY';
 
 export const timeAccountProviders = [
   {
     provide: timeAccountRepoKey,
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(User),
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(TimeAccount),
     inject: [databaseProvidersKey],
     },
 ];
