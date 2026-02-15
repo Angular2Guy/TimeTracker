@@ -12,7 +12,7 @@
  */
 import { TTBaseEntity } from "../../../common/model/entity/base";
 import { User } from "../../../login/model/entity/user";
-import {  Column, Entity, OneToMany } from "typeorm";
+import {  Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 
 @Entity()
 export class TimeAccount extends TTBaseEntity {
@@ -34,6 +34,7 @@ export class TimeAccount extends TTBaseEntity {
     @Column({type: 'varchar', length: 50})
     managerId: string;
 
-    @OneToMany(() => User, (user) => user.timeAccount)
+    @ManyToMany(() => User, (user) => user.timeAccounts)
+    @JoinTable()
     users: User[]   
 }
