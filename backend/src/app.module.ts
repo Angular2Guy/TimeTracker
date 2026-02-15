@@ -17,9 +17,10 @@ import { CommonModule } from './common/common.module';
 import { RolesGuard } from './common/security/roles.guard';
 import { APP_GUARD } from '@nestjs/core/constants';
 import { JwtAuthGuard } from './common/security/jwt-auth.guard';
+import { AccountModule } from './account/account.module';
 
 @Module({
-  imports: [TimeModule, LoginModule, CommonModule],
+  imports: [TimeModule, AccountModule, LoginModule, CommonModule],
   providers: [
     {
       provide: APP_GUARD,

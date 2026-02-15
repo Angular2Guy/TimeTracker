@@ -7,7 +7,8 @@ export class AccountController {
     constructor(private accountService: AccountService) { }
 
     @Get('/manager/:userId')
-    public async getAccountsForManager(@Param('userId') userId: string): Promise<AccountDto[]> {
-        return this.accountService.getAccountsForManager(userId);            
+    public async getAccountsForManager(@Param('userId') userId: string): Promise<AccountDto[]> {        
+        const value = await this.accountService.getAccountsForManager(userId);                    
+        return value;            
     }
 }

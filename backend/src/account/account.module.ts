@@ -14,6 +14,7 @@ import { Module } from "@nestjs/common";
 import { CommonModule } from "../common/common.module";
 import { AccountService } from "./service/account.service";
 import { AccountController } from './controller/account.controller';
+import { timeAccountProviders } from "./model/entity/time-account.providers";
 
-@Module({imports: [CommonModule], providers: [AccountService], controllers: [AccountController]})
+@Module({imports: [CommonModule], providers: [AccountService, ...timeAccountProviders], controllers: [AccountController]})
 export class AccountModule {}
