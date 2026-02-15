@@ -10,9 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { TimeAccount } from "../../../account/model/entity/time-account";
+import { TimeAccount } from "src/account/model/entity/time-account";
 import { TTBaseEntity } from "../../../common/model/entity/base";
-import {Column, Entity, ManyToMany } from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 
 export enum UserRole {
     USER = 'user',
