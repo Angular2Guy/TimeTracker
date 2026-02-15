@@ -16,12 +16,13 @@ import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './user-accounts.module.css';
-import type { UserDto } from "~/model/user";
-import { getUsers } from "~/api/user-service";
 import { Autocomplete, Avatar, Box, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
+import type { UserDto } from "~/model/user";
+import { getUsers } from "~/api/user.service";
+import { getUserAccountsByManager } from "~/api/user-account.service";
 
 
 export function UserAccounts() {
@@ -33,6 +34,7 @@ export function UserAccounts() {
   const [selectedUser, setSelectedUser] = useState(null as UserDto | null);
   const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);    
+  const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
   const [tableData, setTableData] = useState<any[]>([
@@ -102,7 +104,7 @@ export function UserAccounts() {
  }, [tableData]);
 
   useEffect(() => {       
-    if(!!controller.current && users.length > 0) {
+    if(!!controller.current && users.length > 0 && tableData.length > 0) {
       return;
       //controller.current.abort();
     }
@@ -111,6 +113,11 @@ export function UserAccounts() {
       setUsers(data);
     }).catch((error) => {
       console.error('Error fetching users:', error);
+    });
+    getUserAccountsByManager(globalJwtTokenState, globalUserIdState, controller.current).then((data) => {
+      setTableData(data);
+    }).catch((error) => {
+      console.error('Error fetching user accounts:', error);
     });
   }, []);
 

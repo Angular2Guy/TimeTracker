@@ -10,13 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-import type { UserDto } from "~/model/user";
-import { apiPrefix, apiUrl, handleResponse } from "./login-service";
-
-export const getUsers = async (jwtToken: string, controller: AbortController | null) => {
+import { apiPrefix, apiUrl, handleResponse } from "./login.service";
+import type { UserAccountDto } from "~/model/user-account";
+  
+export const getUserAccountsByManager = async (jwtToken: string, managerId: string, controller: AbortController | null) => {
   const requestOptions = getOptions(jwtToken, controller);
-  const result = await fetch(`${apiUrl}${apiPrefix}/user/all`, requestOptions);
-  return handleResponse<UserDto[]>(result);
+  const result = await fetch(`${apiUrl}${apiPrefix}/account/manager/${managerId}`, requestOptions);
+  return handleResponse<UserAccountDto[]>(result);
 }
 
 const getOptions = (jwtToken: string, controller: AbortController | null) => {

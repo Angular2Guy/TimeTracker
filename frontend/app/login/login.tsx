@@ -14,7 +14,7 @@ import { useAtom } from "jotai";
 import { useEffect, useRef, useState, type BaseSyntheticEvent, type ChangeEventHandler, type FormEvent } from "react";
 import { Button, Tabs, Tab, Box, TextField, type SelectChangeEvent, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from "react-router";
-import { postLogin, postSignin } from "~/api/login-service";
+import { postLogin, postSignin } from "~/api/login.service";
 import GlobalState from "~/global-state";
 import { useTranslation, Trans } from 'react-i18next';
 import styles from './login.module.css';
