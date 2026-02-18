@@ -1,4 +1,4 @@
-/**
+ /**
  *    Copyright 2023 Sven Loesekann
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -11,5 +11,14 @@
    limitations under the License.
  */
  .first {
-    margin-top: 64px;
+    /*margin-top: 64px;*/
+    margin-top: 74px;
+    padding: 0 10px 0 10px;
+    width: 100%;
  }
+
+ .baseContainer {
+    display: flex; 
+    gap: 10px;
+ }
+ 
