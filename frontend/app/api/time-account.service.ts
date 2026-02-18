@@ -11,12 +11,12 @@
     limitations under the License.
 */
 import { apiPrefix, apiUrl, handleResponse } from "./login.service";
-import type { UserAccountDto } from "~/model/user-account";
+import type { TimeAccountDto } from "~/model/time-account";
   
-export const getUserAccountsByManager = async (jwtToken: string, managerId: string, controller: AbortController | null) => {
+export const getTimeAccountsByManager = async (jwtToken: string, managerId: string, controller: AbortController | null) => {
   const requestOptions = getOptions(jwtToken, controller);
   const result = await fetch(`${apiUrl}${apiPrefix}/account/manager/${managerId}`, requestOptions);
-  return handleResponse<UserAccountDto[]>(result);
+  return handleResponse<TimeAccountDto[]>(result);
 }
 
 const getOptions = (jwtToken: string, controller: AbortController | null) => {

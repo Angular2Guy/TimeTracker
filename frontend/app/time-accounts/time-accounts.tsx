@@ -22,7 +22,7 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
-import { getUserAccountsByManager } from "~/api/user-account.service";
+import { getTimeAccountsByManager } from "~/api/time-account.service";
 
 
 export function TimeAccounts() {
@@ -122,11 +122,10 @@ export function TimeAccounts() {
     }).catch((error) => {
       console.error('Error fetching users:', error);
     });
-    getUserAccountsByManager(globalJwtTokenState, globalUserIdState, controller.current).then((data) => {
-      setTableData(data);
-      console.log(data);
+    getTimeAccountsByManager(globalJwtTokenState, globalUserIdState, controller.current).then((data) => {
+      setTableData(data);      
     }).catch((error) => {
-      console.error('Error fetching user accounts:', error);
+      console.error('Error fetching time accounts:', error);
     });
   }, []);
 
