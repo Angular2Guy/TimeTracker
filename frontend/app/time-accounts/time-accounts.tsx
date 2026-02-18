@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from './time-accounts.module.css';
-import { Autocomplete, Avatar, Box, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, Button, Icon, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
@@ -49,6 +49,14 @@ export function TimeAccounts() {
     setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
   }
 
+  const save = () => {
+    console.log('save', selectedUsers, tableData);
+  }
+
+  const add = () => {
+    console.log('add');
+  }
+
  useEffect(() => {
   if (!tableRef.current) return;
 
@@ -63,8 +71,8 @@ export function TimeAccounts() {
         layout: "fitColumns",
         //virtualDom: true,
         columns: [
-          { title: "Name", field: "name", width: 150 },
-          { title: "Age", field: "age", hozAlign: "left", formatter: "progress" },
+          { title: "Name", field: "name", width: 150, editor: "input" },
+          { title: "Age", field: "age", hozAlign: "left", width: 150, editor: "input" },
           { title: "Favourite Color", field: "col" },
           { title: "Date Of Birth", field: "dob", sorter: "date", hozAlign: "center" },
         ],
@@ -124,8 +132,12 @@ export function TimeAccounts() {
 
   return (    
     <div>
-  <div><SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts"/></div>  
-  <div className={[styles.first, styles.baseContainer].join(' ')}>
+  <div><SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts"/></div>    
+  <div className={[styles.buttonRow,styles.first].join(' ')}>
+    <Button variant="outlined" onClick={save}>Save</Button>
+    <Button variant="outlined" onClick={add}>Add</Button>
+  </div>
+  <div className={styles.baseContainer}>
   <div>
   <Autocomplete
       id="country-select-demo"
