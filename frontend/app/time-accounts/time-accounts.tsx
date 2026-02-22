@@ -24,6 +24,7 @@ import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
 import { getTimeAccountsByManager } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
+import { DateTime } from "luxon";
 
 
 export function TimeAccounts() {
@@ -70,16 +71,49 @@ export function TimeAccounts() {
 
     try {
       const table = new Tabulator(tableRef.current, {
+        
         height: "100%",
         data: tableData,
         layout: "fitColumns",
         //virtualDom: true,
         columns: [
-          { title: "Name", field: "name", width: 150, editor: "input" },
-          { title: "Description", field: "description", hozAlign: "left", width: 150, editor: "input" },
+          { title: "Name", field: "name", width: 250, editor: "input" },
+          { title: "Description", field: "description", hozAlign: "left",  editor: "input" },
           { title: "Duration", field: "duration", hozAlign: "left", width: 150, editor: "input" },
-          { title: "Start Date", field: "startDate", sorter: "date", hozAlign: "center" },
-          { title: "End Date", field: "endDate", sorter: "date", hozAlign: "center" },
+          {
+            title: "Start Date",
+            field: "startDate",
+            sorter: "date",
+            hozAlign: "center",
+            width: 150,
+            formatter: function(cell: any) {
+              const v = cell.getValue();
+              if (!v) return "";
+              try {
+                const dt = typeof v === "string" ? DateTime.fromISO(v) : DateTime.fromJSDate(new Date(v));
+                return dt && dt.isValid ? dt.toLocaleString(DateTime.DATE_MED) : "";
+              } catch (e) {
+                return "";
+              }
+            }
+          },
+          {
+            title: "End Date",
+            field: "endDate",
+            sorter: "date",
+            hozAlign: "center",
+            width: 150,
+            formatter: function(cell: any) {
+              const v = cell.getValue();
+              if (!v) return "";
+              try {
+                const dt = typeof v === "string" ? DateTime.fromISO(v) : DateTime.fromJSDate(new Date(v));
+                return dt && dt.isValid ? dt.toLocaleString(DateTime.DATE_MED) : "";
+              } catch (e) {
+                return "";
+              }
+            }
+          },
         ],
       });
 
