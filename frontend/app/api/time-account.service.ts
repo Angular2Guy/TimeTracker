@@ -14,18 +14,33 @@ import { apiPrefix, apiUrl, handleResponse } from "./login.service";
 import type { TimeAccountDto } from "~/model/time-account";
   
 export const getTimeAccountsByManager = async (jwtToken: string, managerId: string, controller: AbortController | null) => {
-  const requestOptions = getOptions(jwtToken, controller);
+  const requestOptions = request(jwtToken, controller);
   const result = await fetch(`${apiUrl}${apiPrefix}/account/manager/${managerId}`, requestOptions);
   return handleResponse<TimeAccountDto[]>(result);
 }
 
-const getOptions = (jwtToken: string, controller: AbortController | null) => {
+export const postTimeAccounts = async (jwtToken: string, timeAccounts: TimeAccountDto[], controller: AbortController | null) => {
+  const requestOptions = request(jwtToken, controller, HttpMethod.POST);
+  requestOptions.body = JSON.stringify(timeAccounts);
+  const result = await fetch(`${apiUrl}${apiPrefix}/account`, requestOptions);
+  return handleResponse<TimeAccountDto[]>(result);
+}
+
+export enum HttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE'
+}
+
+const request = (jwtToken: string, controller: AbortController | null, method: HttpMethod = HttpMethod.GET) => {
   return {
-    method: 'GET',
+    method: method,
     headers: { 
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${jwtToken}`
     }, 
-    signal: controller?.signal
+    signal: controller?.signal,
+    body: null as null | string
   };
 };

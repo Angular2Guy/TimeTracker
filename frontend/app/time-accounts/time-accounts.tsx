@@ -22,7 +22,7 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
-import { getTimeAccountsByManager } from "~/api/time-account.service";
+import { getTimeAccountsByManager, postTimeAccounts } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { DateTime } from "luxon";
 
@@ -51,6 +51,11 @@ export function TimeAccounts() {
   }
 
   const save = () => {
+    postTimeAccounts(globalJwtTokenState, tableData, controller.current).then((data) => {
+      setTableData(data);
+    }).catch((error) => {
+      console.error('Error saving time accounts:', error);
+    });
     console.log('save', selectedUsers, tableData);
   }
 
@@ -104,7 +109,7 @@ export function TimeAccounts() {
               }
             },
             editorParams:{
-    min:"01/01/2020", // the minimum allowed value for the date picker
+    min:"01/01/2000", // the minimum allowed value for the date picker
     max:"02/12/2100", // the maximum allowed value for the date picker
     format:"dd.MM.yyyy", // the format of the date value stored in the cell
     verticalNavigation:"table", //navigate cursor around table without changing the value
@@ -131,7 +136,7 @@ export function TimeAccounts() {
               }
             },
             editorParams:{
-    min:"01/01/2020", // the minimum allowed value for the date picker
+    min:"01/01/2000", // the minimum allowed value for the date picker
     max:"02/12/2100", // the maximum allowed value for the date picker
     format:"dd.MM.yyyy", // the format of the date value stored in the cell
     verticalNavigation:"table", //navigate cursor around table without changing the value        
