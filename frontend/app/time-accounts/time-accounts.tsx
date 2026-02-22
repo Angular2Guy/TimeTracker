@@ -23,6 +23,7 @@ import 'tabulator-tables/dist/css/tabulator.min.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
 import { getTimeAccountsByManager } from "~/api/time-account.service";
+import type { TimeAccountDto } from "~/model/time-account";
 
 
 export function TimeAccounts() {
@@ -37,13 +38,7 @@ export function TimeAccounts() {
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
-  const [tableData, setTableData] = useState<any[]>([
-  {id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
-  {id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
-  {id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
-  {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
-  {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
-   ]);
+  const [tableData, setTableData] = useState<TimeAccountDto[]>([]);
 
   const removeUserFromSelectedUsers = (user: UserDto) => {
     setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
@@ -54,7 +49,16 @@ export function TimeAccounts() {
   }
 
   const add = () => {
-    console.log('add');
+    const newAccount = {
+      name: '',
+      description: '',
+      duration: 0,
+      startDate: new Date(),
+      endDate: new Date(),
+      managerId: globalUserIdState,
+      userIds: []
+    } as TimeAccountDto;
+    setTableData([newAccount, ...tableData]);
   }
 
  useEffect(() => {
@@ -72,9 +76,10 @@ export function TimeAccounts() {
         //virtualDom: true,
         columns: [
           { title: "Name", field: "name", width: 150, editor: "input" },
-          { title: "Age", field: "age", hozAlign: "left", width: 150, editor: "input" },
-          { title: "Favourite Color", field: "col" },
-          { title: "Date Of Birth", field: "dob", sorter: "date", hozAlign: "center" },
+          { title: "Description", field: "description", hozAlign: "left", width: 150, editor: "input" },
+          { title: "Duration", field: "duration", hozAlign: "left", width: 150, editor: "input" },
+          { title: "Start Date", field: "startDate", sorter: "date", hozAlign: "center" },
+          { title: "End Date", field: "endDate", sorter: "date", hozAlign: "center" },
         ],
       });
 
