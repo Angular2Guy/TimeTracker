@@ -26,6 +26,11 @@ import { getTimeAccountsByManager } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { DateTime } from "luxon";
 
+declare global {
+  interface Window {
+    DateTime: typeof DateTime;
+  }
+}
 
 export function TimeAccounts() {
   let controller = useRef<AbortController | null>(null);    
@@ -70,11 +75,12 @@ export function TimeAccounts() {
     if (!tableRef.current) return;
 
     try {
+      window.DateTime = DateTime
       const table = new Tabulator(tableRef.current, {
         
         height: "100%",
         data: tableData,
-        layout: "fitColumns",
+        layout: "fitColumns",        
         //virtualDom: true,
         columns: [
           { title: "Name", field: "name", width: 250, editor: "input" },
@@ -84,6 +90,7 @@ export function TimeAccounts() {
             title: "Start Date",
             field: "startDate",
             sorter: "date",
+            editor:"date",
             hozAlign: "center",
             width: 150,
             formatter: function(cell: any) {
@@ -91,15 +98,25 @@ export function TimeAccounts() {
               if (!v) return "";
               try {
                 const dt = typeof v === "string" ? DateTime.fromISO(v) : DateTime.fromJSDate(new Date(v));
-                return dt && dt.isValid ? dt.toLocaleString(DateTime.DATE_MED) : "";
+                return dt && dt.isValid ? dt.toFormat("dd.MM.yyyy") : "";
               } catch (e) {
                 return "";
               }
-            }
+            },
+            editorParams:{
+    min:"01/01/2020", // the minimum allowed value for the date picker
+    max:"02/12/2100", // the maximum allowed value for the date picker
+    format:"dd.MM.yyyy", // the format of the date value stored in the cell
+    verticalNavigation:"table", //navigate cursor around table without changing the value
+    elementAttributes:{
+        title:"slide bar to choose option" // custom tooltip
+    }
+}
           },
           {
             title: "End Date",
             field: "endDate",
+            editor:"date",
             sorter: "date",
             hozAlign: "center",
             width: 150,
@@ -108,15 +125,23 @@ export function TimeAccounts() {
               if (!v) return "";
               try {
                 const dt = typeof v === "string" ? DateTime.fromISO(v) : DateTime.fromJSDate(new Date(v));
-                return dt && dt.isValid ? dt.toLocaleString(DateTime.DATE_MED) : "";
+                return dt && dt.isValid ? dt.toFormat("dd.MM.yyyy") : "";
               } catch (e) {
                 return "";
               }
-            }
+            },
+            editorParams:{
+    min:"01/01/2020", // the minimum allowed value for the date picker
+    max:"02/12/2100", // the maximum allowed value for the date picker
+    format:"dd.MM.yyyy", // the format of the date value stored in the cell
+    verticalNavigation:"table", //navigate cursor around table without changing the value        
+    elementAttributes:{
+        title:"slide bar to choose option" // custom tooltip
+    }
+}
           },
         ],
-      });
-
+      });      
       tableInstanceRef.current = table;
     } catch (e) {
       console.error("Tabulator initialization error:", e);
