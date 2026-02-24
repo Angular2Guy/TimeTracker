@@ -45,6 +45,7 @@ export function TimeAccounts() {
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
   const [tableData, setTableData] = useState<TimeAccountDto[]>([]);
+  const [selectedRow, setSelectedRow] = useState<TimeAccountDto | null>(null);
 
   const removeUserFromSelectedUsers = (user: UserDto) => {
     setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
@@ -85,7 +86,8 @@ export function TimeAccounts() {
         
         height: "100%",
         data: tableData,
-        layout: "fitColumns",        
+        layout: "fitColumns",
+        selectableRows: 1,
         //virtualDom: true,
         columns: [
           { title: "Name", field: "name", width: 250, editor: "input" },
@@ -146,7 +148,35 @@ export function TimeAccounts() {
 }
           },
         ],
-      });      
+      });
+
+      // register selection event handlers via `on` to match typings
+      table.on("rowSelected", (row: any) => {
+        try {
+          const data = row.getData();
+          setSelectedRow((prev) => {
+            try {
+              const prevId = (prev as any)?.id;
+              const dataId = (data as any)?.id;
+              if (prev && data && prevId !== undefined && dataId !== undefined) {
+                if (prevId === dataId) return prev;
+              } else if (prev === data) {
+                return prev;
+              }
+            } catch (e) {
+              // ignore comparison errors
+            }
+            return data;
+          });
+        } catch (e) {
+          setSelectedRow(null);
+        }
+      });
+
+      table.on("rowDeselected", (_row: any) => {
+        setSelectedRow((prev) => (prev ? null : prev));
+      });
+
       tableInstanceRef.current = table;
     } catch (e) {
       console.error("Tabulator initialization error:", e);
@@ -178,7 +208,7 @@ export function TimeAccounts() {
   } catch (e) {
     // ignore update errors
   }
- }, [tableData]);
+ }, [tableData]);`selectedRow`
 
   useEffect(() => {       
     if(!!controller.current && users.length > 0 && tableData.length > 0) {
