@@ -19,11 +19,11 @@ export const getTimeAccountsByManager = async (jwtToken: string, managerId: stri
   return handleResponse<TimeAccountDto[]>(result);
 }
 
-export const postTimeAccounts = async (jwtToken: string, timeAccounts: TimeAccountDto[], controller: AbortController | null) => {
+export const postTimeAccount = async (jwtToken: string, timeAccount: TimeAccountDto, controller: AbortController | null) => {
   const requestOptions = request(jwtToken, controller, HttpMethod.POST);
-  requestOptions.body = JSON.stringify(timeAccounts);
+  requestOptions.body = JSON.stringify(timeAccount);
   const result = await fetch(`${apiUrl}${apiPrefix}/account`, requestOptions);
-  return handleResponse<TimeAccountDto[]>(result);
+  return handleResponse<TimeAccountDto>(result);
 }
 
 export enum HttpMethod {

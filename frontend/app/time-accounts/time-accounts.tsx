@@ -22,7 +22,7 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
-import { getTimeAccountsByManager, postTimeAccounts } from "~/api/time-account.service";
+import { getTimeAccountsByManager, postTimeAccount, postTimeAccounts } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { DateTime } from "luxon";
 
@@ -52,12 +52,14 @@ export function TimeAccounts() {
   }
 
   const save = () => {
-    postTimeAccounts(globalJwtTokenState, tableData, controller.current).then((data) => {
-      setTableData(data);
+    postTimeAccount(globalJwtTokenState, selectedRow as TimeAccountDto, controller.current).then((data) => {
+      setSelectedRow(data);
+      const myTableData = tableData.filter(d => d.id !== data.id).concat(data);
+      setTableData(myTableData);      
     }).catch((error) => {
       console.error('Error saving time accounts:', error);
     });
-    console.log('save', selectedUsers, tableData);
+    console.log('save', selectedUsers, tableData, selectedRow);
   }
 
   const add = () => {
@@ -250,6 +252,12 @@ export function TimeAccounts() {
       event.defaultMuiPrevented = true;      
       if (selectedUser) {
         setSelectedUsers(selectedUsers.filter(u => u.id !== selectedUser.id).concat(selectedUser));        
+        const mySelectedRow = selectedRow;
+        if (mySelectedRow) {
+          const userIds = mySelectedRow.userIds ? mySelectedRow.userIds : [];
+          mySelectedRow.userIds = userIds.filter(id => id !== selectedUser.id).concat(selectedUser.id);
+          setSelectedRow(mySelectedRow);
+        }
       }
     }}}
       getOptionLabel={(option) => option.username}
