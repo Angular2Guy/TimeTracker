@@ -21,4 +21,9 @@ export class AccountService {
             userIds: accountEntity.users.map(user => user.id)
         }));
     }
+
+    public async saveAccount(userId: string, accountDto: AccountDto): Promise<AccountDto> {
+        let accountEntity: TimeAccount;
+        return accountDto;
+    }
 }
