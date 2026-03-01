@@ -22,7 +22,7 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import type { UserDto } from "~/model/user";
 import { getUsers } from "~/api/user.service";
-import { getTimeAccountsByManager, postTimeAccount, postTimeAccounts } from "~/api/time-account.service";
+import { getTimeAccountsByManager, postTimeAccount } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { DateTime } from "luxon";
 
@@ -34,6 +34,8 @@ declare global {
 
 export function TimeAccounts() {
   let controller = useRef<AbortController | null>(null);    
+  // store the currently selected row in a ref so it survives renders
+  const selectedRowRef = useRef<TimeAccountDto | null>(null);  
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
   const [users, setUsers] = useState([] as UserDto[]);
@@ -44,22 +46,22 @@ export function TimeAccounts() {
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
-  const [tableData, setTableData] = useState<TimeAccountDto[]>([]);
-  const [selectedRow, setSelectedRow] = useState<TimeAccountDto | null>(null);
+  const [tableData, setTableData] = useState<TimeAccountDto[]>([]);  
 
   const removeUserFromSelectedUsers = (user: UserDto) => {
     setSelectedUsers(selectedUsers.filter(u => u.id !== user.id));
   }
 
   const save = () => {
-    postTimeAccount(globalJwtTokenState, selectedRow as TimeAccountDto, controller.current).then((data) => {
-      setSelectedRow(data);
+    console.log('save', selectedUsers, tableData, selectedRowRef.current);
+    const current = selectedRowRef.current;
+    postTimeAccount(globalJwtTokenState, current as TimeAccountDto, controller.current).then((data) => {
+      selectedRowRef.current = data;
       const myTableData = tableData.filter(d => d.id !== data.id).concat(data);
       setTableData(myTableData);      
     }).catch((error) => {
       console.error('Error saving time accounts:', error);
-    });
-    console.log('save', selectedUsers, tableData, selectedRow);
+    });    
   }
 
   const add = () => {
@@ -72,7 +74,8 @@ export function TimeAccounts() {
       managerId: globalUserIdState,
       userIds: []
     } as TimeAccountDto;
-    setTableData([newAccount, ...tableData]);
+    selectedRowRef.current = newAccount;
+    setTableData([newAccount, ...tableData]);    
   }
 
  useEffect(() => {
@@ -153,33 +156,11 @@ export function TimeAccounts() {
       });
 
       // register selection event handlers via `on` to match typings
-      table.on("rowSelected", (row: any) => {
-        try {
-          const data = row.getData();
-          setSelectedRow((prev) => {
-            try {
-              const prevId = (prev as any)?.id;
-              const dataId = (data as any)?.id;
-              if (prev && data && prevId !== undefined && dataId !== undefined) {
-                if (prevId === dataId) return prev;
-              } else if (prev === data) {
-                return prev;
-              }
-            } catch (e) {
-              // ignore comparison errors
-            }
-            return data;
-          });
-        } catch (e) {
-          setSelectedRow(null);
-        }
+      table.on("rowSelected", (row: any) => {        
+        selectedRowRef.current = row.getData();
       });
 
-      table.on("rowDeselected", (_row: any) => {
-        setSelectedRow((prev) => (prev ? null : prev));
-      });
-
-      tableInstanceRef.current = table;
+      tableInstanceRef.current = table;      
     } catch (e) {
       console.error("Tabulator initialization error:", e);
     }
@@ -210,7 +191,7 @@ export function TimeAccounts() {
   } catch (e) {
     // ignore update errors
   }
- }, [tableData]);`selectedRow`
+ }, [tableData]);
 
   useEffect(() => {       
     if(!!controller.current && users.length > 0 && tableData.length > 0) {
@@ -252,11 +233,11 @@ export function TimeAccounts() {
       event.defaultMuiPrevented = true;      
       if (selectedUser) {
         setSelectedUsers(selectedUsers.filter(u => u.id !== selectedUser.id).concat(selectedUser));        
-        const mySelectedRow = selectedRow;
+        const mySelectedRow = selectedRowRef.current;
         if (mySelectedRow) {
           const userIds = mySelectedRow.userIds ? mySelectedRow.userIds : [];
           mySelectedRow.userIds = userIds.filter(id => id !== selectedUser.id).concat(selectedUser.id);
-          setSelectedRow(mySelectedRow);
+          selectedRowRef.current = mySelectedRow;
         }
       }
     }}}
