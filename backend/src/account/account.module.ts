@@ -15,6 +15,7 @@ import { CommonModule } from "../common/common.module";
 import { AccountService } from "./service/account.service";
 import { AccountController } from './controller/account.controller';
 import { timeAccountProviders } from "./model/entity/time-account.providers";
+import { userProviders } from "../login/model/entity/user.providers";
 
-@Module({imports: [CommonModule], providers: [AccountService, ...timeAccountProviders], controllers: [AccountController]})
+@Module({imports: [CommonModule], providers: [AccountService, ...timeAccountProviders, ...userProviders], controllers: [AccountController]})
 export class AccountModule {}
