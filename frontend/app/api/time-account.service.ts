@@ -22,7 +22,7 @@ export const getTimeAccountsByManager = async (jwtToken: string, managerId: stri
 export const postTimeAccount = async (jwtToken: string, timeAccount: TimeAccountDto, controller: AbortController | null) => {
   const requestOptions = request(jwtToken, controller, HttpMethod.POST);
   requestOptions.body = JSON.stringify(timeAccount);
-  const result = await fetch(`${apiUrl}${apiPrefix}/account`, requestOptions);
+  const result = await fetch(`${apiUrl}${apiPrefix}/account/${timeAccount.managerId}`, requestOptions);
   return handleResponse<TimeAccountDto>(result);
 }
 

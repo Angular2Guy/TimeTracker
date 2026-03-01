@@ -12,7 +12,7 @@ export class AccountController {
         return value;            
     }
 
-    @Post('/userId')
+    @Post('/:userId')
     public async saveAccount(@Param('userId') userId: string, @Body() accountDto: AccountDto): Promise<AccountDto> {        
         const value = await this.accountService.saveAccount(userId, accountDto);                    
         return value;
