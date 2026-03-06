@@ -54,8 +54,13 @@ export function TimeAccounts() {
 
   const save = () => {
     console.log('save', selectedUsers, tableData, selectedRowRef.current);
-    const current = selectedRowRef.current;
-    postTimeAccount(globalJwtTokenState, current as TimeAccountDto, controller.current).then((data) => {
+    const selectedRow = selectedRowRef.current;
+    if(!selectedRow) {
+      console.warn('No row selected to save');
+      return;
+    }
+    selectedRow.userIds = selectedUsers.map(u => u.id);
+    postTimeAccount(globalJwtTokenState, selectedRow as TimeAccountDto, controller.current).then((data) => {
       selectedRowRef.current = data;
       const myTableData = tableData.filter(d => d.id !== data.id).concat(data);
       setTableData(myTableData);      
