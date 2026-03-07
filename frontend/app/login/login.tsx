@@ -14,7 +14,7 @@ import { useAtom } from "jotai";
 import { useEffect, useRef, useState, type BaseSyntheticEvent, type ChangeEventHandler, type FormEvent } from "react";
 import { Button, Tabs, Tab, Box, TextField, type SelectChangeEvent, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from "react-router";
-import { postLogin, postSignin, updateTokenLoop } from "~/api/login.service";
+import { postLogin, postSignin, updateToken } from "~/api/login.service";
 import GlobalState from "~/global-state";
 import { useTranslation, Trans } from 'react-i18next';
 import styles from './login.module.css';
@@ -102,6 +102,13 @@ export function Login() {
     i18n.changeLanguage(event.target.value).then();
   };
 
+  const refreshTokenLoop = () => {
+    setInterval(async () => {      
+      const newToken = await updateToken(globalJwtTokenState);
+      setGlobalJwtTokenState(newToken);
+    }, 40 * 1000);
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();    
     if(!!controller.current) {
@@ -115,7 +122,7 @@ export function Login() {
     setGlobalRolesState(response.roles);    
     setGlobalUserIdState(response.userId);
     if(response?.token?.length > 10) {
-      await updateTokenLoop();
+      refreshTokenLoop();
       navigate('/');        
     } else if(activeTab === 0) {
       setResponseMsg(t('login.loginFailed'));
