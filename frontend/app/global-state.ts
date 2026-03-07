@@ -13,7 +13,7 @@
 import { atom } from "jotai";
 
 const GlobalState = {
-    jwtToken: atom(''),
+    jwtToken: '',
     roles: atom<string[]>([]),  
     userId: atom(''),  
 };

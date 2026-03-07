@@ -10,8 +10,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-import { useAtom, type SetStateAction } from "jotai";
-import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import type { LoginRequest, LoginResponse } from "~/model/login";
 
@@ -19,12 +17,20 @@ export const apiPrefix = '/rest';
 
 export const apiUrl = import.meta.env.VITE_API_URL;
 
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
 export async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.text();
-    const navigate = useNavigate();
-    if(navigate) navigate('/');
-    throw new Error(error || `HTTP error! status: ${response.status}`);
+    throw new ApiError(error || `HTTP error! status: ${response.status}`, response.status);
   }
   return response.json();
 }
@@ -54,14 +60,16 @@ interface RefreshToken {
   token: string;
 }
 
-export const updateToken = async (token: string) => {  
+export const updateToken = () => {  
+  setInterval(async () => {
   const abortController = new AbortController();    
   const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: token } as RefreshToken),
+    headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${GlobalState.jwtToken}` },
+    body: JSON.stringify({ token: GlobalState.jwtToken } as RefreshToken),
     signal: abortController.signal
   });
   const result = await handleResponse<RefreshToken>(response);
-  return result.token;  
+  GlobalState.jwtToken = result.token;
+}, 40 * 1000); 
 };

@@ -44,7 +44,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export function Login() {
-  let controller = useRef<AbortController | null>(null);  
+  let controller = useRef<AbortController | null>(null);    
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();  
   const [email, setEmail] = useState('');
@@ -54,7 +54,6 @@ export function Login() {
   const [activeTab, setActiveTab] = useState(0);  
   const [language, setLanguage] = useState('en');
   const [responseMsg, setResponseMsg] = useState('');
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
 
@@ -102,13 +101,6 @@ export function Login() {
     i18n.changeLanguage(event.target.value).then();
   };
 
-  const refreshTokenLoop = () => {
-    setInterval(async () => {      
-      const newToken = await updateToken(globalJwtTokenState);
-      setGlobalJwtTokenState(newToken);
-    }, 40 * 1000);
-  }
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();    
     if(!!controller.current) {
@@ -116,25 +108,25 @@ export function Login() {
     }
     setResponseMsg('');
     controller.current = new AbortController();
-    const response = activeTab === 0 ? await postLogin(email, password1, controller.current) : await postSignin(email, username, password1, controller.current);
-    //controller.current = null;
-    setGlobalJwtTokenState(response.token);
-    setGlobalRolesState(response.roles);    
-    setGlobalUserIdState(response.userId);
-    if(response?.token?.length > 10) {
-      refreshTokenLoop();
-      navigate('/');        
-    } else if(activeTab === 0) {
-      setResponseMsg(t('login.loginFailed'));
-    } else if(activeTab === 1 && response?.token?.length <= 1) {
-      setResponseMsg(t('login.signinFailed'));
-    }  else {
-      setActiveTab(0);
-    }
-    setEmail('');
-    setUsername('');
-    setPassword1('');
-    setPassword2('');
+      const response = activeTab === 0 ? await postLogin(email, password1, controller.current) : await postSignin(email, username, password1, controller.current);
+      GlobalState.jwtToken = response.token;      
+      setGlobalRolesState(response.roles);
+      setGlobalUserIdState(response.userId);
+
+      if(response?.token?.length > 10) {
+        updateToken();
+        navigate('/');
+      } else if(activeTab === 0) {
+        setResponseMsg(t('login.loginFailed'));
+      } else if(activeTab === 1 && response?.token?.length <= 1) {
+        setResponseMsg(t('login.signinFailed'));
+      } else {
+        setActiveTab(0);
+      }
+      setEmail('');
+      setUsername('');
+      setPassword1('');
+      setPassword2('');   
   }
 
   return (<div className={styles.container}><div className={styles.content}>

@@ -6,7 +6,8 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "prettier": "npx prettier . --write"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -14,7 +15,7 @@
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
     "@react-router/node": "7.10.1",
-    "@react-router/serve": "7.10.1",    
+    "@react-router/serve": "7.10.1",
     "i18next-browser-languagedetector": "^8.2.0",
     "isbot": "^5.1.31",
     "jotai": "^2.16.2",
@@ -28,11 +29,12 @@
   "devDependencies": {
     "@react-router/dev": "7.10.1",
     "@tailwindcss/vite": "^4.1.13",
+    "@types/luxon": "^3.7.1",
     "@types/node": "^22",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/tabulator-tables": "^6.3.1",
-    "@types/luxon": "^3.7.1",
+    "prettier": "3.8.1",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
