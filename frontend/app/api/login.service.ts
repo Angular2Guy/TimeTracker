@@ -10,7 +10,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+import { useAtom } from "jotai";
 import { useNavigate } from "react-router";
+import GlobalState from "~/global-state";
 import type { LoginRequest, LoginResponse } from "~/model/login";
 
 export const apiPrefix = '/rest';
@@ -46,4 +48,23 @@ const loginSigninOptions = (email: string, username: string, password1: string, 
     body: JSON.stringify({ email: email, username: username, password: password1 } as LoginRequest),
     signal: controller?.signal
   };
+};
+
+interface RefreshToken {
+  token: string;
+}
+
+export const updateTokenLoop =  () => {
+  setInterval(async () => {
+const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
+  const abortController = new AbortController();
+  const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: globalJwtTokenState } as RefreshToken),
+    signal: abortController.signal
+  });
+  const result = await handleResponse<RefreshToken>(response);
+  setGlobalJwtTokenState(result.token);
+  }, 40 * 1000);  
 };

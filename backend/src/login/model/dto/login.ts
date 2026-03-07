@@ -22,3 +22,7 @@ export interface LoginResponse {
   roles: string[];
   userId: string;
 }
+
+export interface RefreshToken {
+  token: string;
+}

@@ -12,7 +12,7 @@
  */
 import { Body, Controller, Post } from '@nestjs/common';
 import { LoginService } from '../service/login.service';
-import type { LoginRequest, LoginResponse } from '../model/dto/login';
+import type { LoginRequest, LoginResponse, RefreshToken } from '../model/dto/login';
 import { Public } from '../../common/security/public.decorator';
 
 @Public()
@@ -30,5 +30,11 @@ export class LoginController {
     public async login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
       let result = await this.loginService.login(loginRequest);
       return Promise.resolve(result);
+    }
+
+    @Post('/refresh')
+    public async refresh(@Body() refreshToken: RefreshToken): Promise<RefreshToken> {
+      let token = await this.loginService.refreshToken(refreshToken);
+      return Promise.resolve({token: token} as RefreshToken);
     }
 }

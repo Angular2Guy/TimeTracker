@@ -10,8 +10,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { TimeAccounts } from "~/time-accounts/time-accounts";
 import type { Route } from "../+types/root";
+import { UserAccounts } from "~/user-accounts/user-accounts";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -22,6 +22,6 @@ export function meta({}: Route.MetaArgs) {
 
 export default function TrackTime() {
   return (
-    <TimeAccounts />
+    <UserAccounts />
   );
 }

@@ -10,9 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { LoginRequest, LoginResponse } from 'src/login/model/dto/login';
+import { LoginRequest, LoginResponse, RefreshToken } from 'src/login/model/dto/login';
 import { User, UserRole } from 'src/login/model/entity/user';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
@@ -81,5 +81,28 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
       Expiration: new Date(Date.now() + (60 * 1000)).toISOString(), 
     } as TokenPayload;    
     return { token: this.jwtService.sign(payload), roles: payload.Roles, userId: user.uuid };
+  }
+
+  private createToken(token: string): string {
+    const payload = this.jwtService.decode(token);    
+    const newPayload = {
+      Username: payload['Username'],
+      Uuid: payload['Uuid'],
+      Subject: 'TimeTracking',
+      Roles: payload['Roles'],
+      Issuer: 'TimeTracker',
+      IssuedAt: new Date(Date.now()).toISOString(),
+      Expiration: new Date(Date.now() + (60 * 1000)).toISOString(), 
+    } as TokenPayload;    
+    return this.jwtService.sign(newPayload);
+  }
+
+  public async refreshToken(refreshToken: RefreshToken): Promise<string> {
+    try {
+    await this.jwtService.verifyAsync(refreshToken.token);
+    } catch (e) {
+      throw new UnauthorizedException('Invalid token');
+    }
+    return this.createToken(refreshToken.token);
   }
 }
