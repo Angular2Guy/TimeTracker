@@ -21,7 +21,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function TrackTime() {
-  return (
-    <UserAccounts />
-  );
+  return <UserAccounts />;
 }

@@ -16,24 +16,26 @@ import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 
-
 export function Main() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const x = true;
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
+  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(
+    GlobalState.jwtToken,
+  );
 
   useEffect(() => {
     if (!globalJwtTokenState || globalJwtTokenState.length === 0) {
-      navigate('/login');
+      navigate("/login");
     } else {
       setShowSidebar(true);
-    }   
-    }, [globalJwtTokenState]);
+    }
+  }, [globalJwtTokenState]);
 
-  return (    
-  <div><SideBar drawerOpen={showSidebar} toolbarTitle="Main Page"/>
-  <div>Main Page</div>
-  </div>
+  return (
+    <div>
+      <SideBar drawerOpen={showSidebar} toolbarTitle="Main Page" />
+      <div>Main Page</div>
+    </div>
   );
 }

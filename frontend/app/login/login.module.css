@@ -11,23 +11,23 @@
     limitations under the License.
 */
 .responseMsg {
-    color: #ff0000;
+  color: #ff0000;
 }
 
 .toright {
-    float: right;
+  float: right;
 }
 
 .content {
-    width: 450px;
-    border: solid 2px rgb(25, 118, 210);
-    border-radius: 4px;
-    padding: 8px;
+  width: 450px;
+  border: solid 2px rgb(25, 118, 210);
+  border-radius: 4px;
+  padding: 8px;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }

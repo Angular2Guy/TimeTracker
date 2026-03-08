@@ -1,18 +1,18 @@
 {
-    "common": {
-        "ok": "OK",
-        "cancel": "Abbrechen",
-        "message": "Nachricht",
-        "language": "Sprache",
-        "english": "Englisch",
-        "german": "Deutsch",
-        "logout": "Abmelden"
-    },
-    "login": {     
-        "email": "EMail",
-        "username": "Benutzername",
-        "password": "Passwort",
-        "login": "Login",
-        "signin": "Registrieren"
-    }
+  "common": {
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "message": "Nachricht",
+    "language": "Sprache",
+    "english": "Englisch",
+    "german": "Deutsch",
+    "logout": "Abmelden"
+  },
+  "login": {
+    "email": "EMail",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "login": "Login",
+    "signin": "Registrieren"
+  }
 }

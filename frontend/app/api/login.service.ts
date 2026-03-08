@@ -13,7 +13,7 @@
 import GlobalState from "~/global-state";
 import type { LoginRequest, LoginResponse } from "~/model/login";
 
-export const apiPrefix = '/rest';
+export const apiPrefix = "/rest";
 
 export const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -22,7 +22,7 @@ export class ApiError extends Error {
 
   constructor(message: string, status: number) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.status = status;
   }
 }
@@ -30,29 +30,61 @@ export class ApiError extends Error {
 export async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.text();
-    throw new ApiError(error || `HTTP error! status: ${response.status}`, response.status);
+    throw new ApiError(
+      error || `HTTP error! status: ${response.status}`,
+      response.status,
+    );
   }
   return response.json();
 }
 
-export const postLogin = async function (email: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
-  const requestOptions = loginSigninOptions(email, '', password1, controller);
-  const result = await fetch(`${apiUrl}${apiPrefix}/login/login`, requestOptions);
+export const postLogin = async function (
+  email: string,
+  password1: string,
+  controller: AbortController | null,
+): Promise<LoginResponse> {
+  const requestOptions = loginSigninOptions(email, "", password1, controller);
+  const result = await fetch(
+    `${apiUrl}${apiPrefix}/login/login`,
+    requestOptions,
+  );
   return handleResponse<LoginResponse>(result);
-}
+};
 
-export const postSignin = async function (email: string, username: string, password1: string, controller: AbortController | null): Promise<LoginResponse> {
-  const requestOptions = loginSigninOptions(email, username, password1, controller);
-  const result = await fetch(`${apiUrl}${apiPrefix}/login/signin`, requestOptions);
+export const postSignin = async function (
+  email: string,
+  username: string,
+  password1: string,
+  controller: AbortController | null,
+): Promise<LoginResponse> {
+  const requestOptions = loginSigninOptions(
+    email,
+    username,
+    password1,
+    controller,
+  );
+  const result = await fetch(
+    `${apiUrl}${apiPrefix}/login/signin`,
+    requestOptions,
+  );
   return handleResponse<LoginResponse>(result);
-}
+};
 
-const loginSigninOptions = (email: string, username: string, password1: string, controller: AbortController | null) => {
+const loginSigninOptions = (
+  email: string,
+  username: string,
+  password1: string,
+  controller: AbortController | null,
+) => {
   return {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email, username: username, password: password1 } as LoginRequest),
-    signal: controller?.signal
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email,
+      username: username,
+      password: password1,
+    } as LoginRequest),
+    signal: controller?.signal,
   };
 };
 
@@ -60,16 +92,19 @@ interface RefreshToken {
   token: string;
 }
 
-export const updateToken = () => {  
+export const updateToken = () => {
   setInterval(async () => {
-  const abortController = new AbortController();    
-  const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${GlobalState.jwtToken}` },
-    body: JSON.stringify({ token: GlobalState.jwtToken } as RefreshToken),
-    signal: abortController.signal
-  });
-  const result = await handleResponse<RefreshToken>(response);
-  GlobalState.jwtToken = result.token;
-}, 40 * 1000); 
+    const abortController = new AbortController();
+    const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GlobalState.jwtToken}`,
+      },
+      body: JSON.stringify({ token: GlobalState.jwtToken } as RefreshToken),
+      signal: abortController.signal,
+    });
+    const result = await handleResponse<RefreshToken>(response);
+    GlobalState.jwtToken = result.token;
+  }, 40 * 1000);
 };

@@ -12,35 +12,53 @@
 */
 import { apiPrefix, apiUrl, handleResponse } from "./login.service";
 import type { TimeAccountDto } from "~/model/time-account";
-  
-export const getTimeAccountsByManager = async (jwtToken: string, managerId: string, controller: AbortController | null) => {
-  const requestOptions = request(jwtToken, controller);
-  const result = await fetch(`${apiUrl}${apiPrefix}/account/manager/${managerId}`, requestOptions);
-  return handleResponse<TimeAccountDto[]>(result);
-}
 
-export const postTimeAccount = async (jwtToken: string, timeAccount: TimeAccountDto, controller: AbortController | null) => {
+export const getTimeAccountsByManager = async (
+  jwtToken: string,
+  managerId: string,
+  controller: AbortController | null,
+) => {
+  const requestOptions = request(jwtToken, controller);
+  const result = await fetch(
+    `${apiUrl}${apiPrefix}/account/manager/${managerId}`,
+    requestOptions,
+  );
+  return handleResponse<TimeAccountDto[]>(result);
+};
+
+export const postTimeAccount = async (
+  jwtToken: string,
+  timeAccount: TimeAccountDto,
+  controller: AbortController | null,
+) => {
   const requestOptions = request(jwtToken, controller, HttpMethod.POST);
   requestOptions.body = JSON.stringify(timeAccount);
-  const result = await fetch(`${apiUrl}${apiPrefix}/account/${timeAccount.managerId}`, requestOptions);
+  const result = await fetch(
+    `${apiUrl}${apiPrefix}/account/${timeAccount.managerId}`,
+    requestOptions,
+  );
   return handleResponse<TimeAccountDto>(result);
-}
+};
 
 export enum HttpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE'
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
 }
 
-const request = (jwtToken: string, controller: AbortController | null, method: HttpMethod = HttpMethod.GET) => {
+const request = (
+  jwtToken: string,
+  controller: AbortController | null,
+  method: HttpMethod = HttpMethod.GET,
+) => {
   return {
     method: method,
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
-    }, 
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwtToken}`,
+    },
     signal: controller?.signal,
-    body: null as null | string
+    body: null as null | string,
   };
 };

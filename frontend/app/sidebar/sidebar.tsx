@@ -10,8 +10,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import {
+  AppBar,
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
@@ -28,10 +42,13 @@ interface DrawerItem {
   roles: string[];
 }
 
-export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: toolbarTitleProp = "Missing header title" }: SideBarProps) {
+export default function SideBar({
+  drawerOpen: openProp = false,
+  toolbarTitle: toolbarTitleProp = "Missing header title",
+}: SideBarProps) {
   const [open, setOpen] = React.useState(openProp);
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   useEffect(() => {
     setOpen(openProp);
@@ -41,30 +58,48 @@ export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: to
     setOpen(newOpen);
   };
 
-  const openAccounts = () => navigate('/accounts');
-  const openTrackTime = () => navigate('/tracktime');
-  const openReports = () => navigate('/reports');
+  const openAccounts = () => navigate("/accounts");
+  const openTrackTime = () => navigate("/tracktime");
+  const openReports = () => navigate("/reports");
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {[{text: 'Accounts', roles: [UserRole.ADMIN, UserRole.PM]}, 
-          {text: 'Track Time', roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN]}, 
-          {text: 'Reports', roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN]}]
-          .filter(item => item.roles.find(role => globalRolesState.includes(role)))
+        {[
+          { text: "Accounts", roles: [UserRole.ADMIN, UserRole.PM] },
+          {
+            text: "Track Time",
+            roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
+          },
+          {
+            text: "Reports",
+            roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
+          },
+        ]
+          .filter((item) =>
+            item.roles.find((role) => globalRolesState.includes(role)),
+          )
           .map((item, index) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton onClick={index === 0 ? openAccounts : index === 1 ? openTrackTime : openReports}>              
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>      
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton
+                onClick={
+                  index === 0
+                    ? openAccounts
+                    : index === 1
+                      ? openTrackTime
+                      : openReports
+                }
+              >
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+      </List>
     </Box>
   );
 
   return (
-    <div>      
+    <div>
       <AppBar position="fixed">
         <Toolbar>
           <IconButton
@@ -76,7 +111,7 @@ export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: to
               {
                 marginRight: 5,
               },
-              open && { display: 'none' },
+              open && { display: "none" },
             ]}
           >
             <MenuIcon />
@@ -85,10 +120,10 @@ export default function SideBar({ drawerOpen: openProp = false, toolbarTitle: to
             {toolbarTitleProp}
           </Typography>
         </Toolbar>
-      </AppBar>  
+      </AppBar>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
     </div>
   );
-}  
+}

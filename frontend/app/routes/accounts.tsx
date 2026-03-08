@@ -20,8 +20,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Accounts() {  
-  return (
-    <TimeAccounts />
-  );
+export default function Accounts() {
+  return <TimeAccounts />;
 }

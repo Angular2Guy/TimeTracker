@@ -11,10 +11,10 @@
    limitations under the License.
  */
 export enum UserRole {
-    USER = 'user',
-    PM = 'pm',
-    ADMIN = 'admin',
-  }
+  USER = "user",
+  PM = "pm",
+  ADMIN = "admin",
+}
 
 export interface UserDto {
   id: string;

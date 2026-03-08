@@ -21,7 +21,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function LoginSignin() {
-  return (
-    <Login/>
-  );
+  return <Login />;
 }

@@ -13,19 +13,22 @@
 import type { UserDto } from "~/model/user";
 import { apiPrefix, apiUrl, handleResponse } from "./login.service";
 
-export const getUsers = async (jwtToken: string, controller: AbortController | null) => {
+export const getUsers = async (
+  jwtToken: string,
+  controller: AbortController | null,
+) => {
   const requestOptions = getOptions(jwtToken, controller);
   const result = await fetch(`${apiUrl}${apiPrefix}/user/all`, requestOptions);
   return handleResponse<UserDto[]>(result);
-}
+};
 
 const getOptions = (jwtToken: string, controller: AbortController | null) => {
   return {
-    method: 'GET',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
-    }, 
-    signal: controller?.signal
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    signal: controller?.signal,
   };
 };

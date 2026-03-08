@@ -15,17 +15,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
-import styles from './user-reports.module.css';
+import styles from "./user-reports.module.css";
 import type { UserDto } from "~/model/user";
 
 export function UserReports() {
   const navigate = useNavigate();
-  const [showSidebar, setShowSidebar] = useState(false);  
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(GlobalState.jwtToken);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(
+    GlobalState.jwtToken,
+  );
 
-  return (    
-  <div><SideBar drawerOpen={showSidebar} toolbarTitle="User Reports"/>
-  <div className={styles.first}>User Reports Page</div>
-  </div>
+  return (
+    <div>
+      <SideBar drawerOpen={showSidebar} toolbarTitle="User Reports" />
+      <div className={styles.first}>User Reports Page</div>
+    </div>
   );
 }

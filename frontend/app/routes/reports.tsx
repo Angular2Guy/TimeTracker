@@ -21,7 +21,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Reports() {
-  return (
-    <UserReports />
-  );
+  return <UserReports />;
 }

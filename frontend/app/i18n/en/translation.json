@@ -1,18 +1,18 @@
 {
-    "common": {
-        "ok": "OK",
-        "cancel": "Cancel",
-        "message": "Message",
-        "language": "Language",
-        "english": "English",
-        "german": "German",
-        "logout": "Logout"
-    },
-    "login": {     
-        "email": "EMail",
-        "password": "Password",
-        "username": "Username",
-        "login": "Login",
-        "signin": "Sign In"
-    }
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "message": "Message",
+    "language": "Language",
+    "english": "English",
+    "german": "German",
+    "logout": "Logout"
+  },
+  "login": {
+    "email": "EMail",
+    "password": "Password",
+    "username": "Username",
+    "login": "Login",
+    "signin": "Sign In"
+  }
 }

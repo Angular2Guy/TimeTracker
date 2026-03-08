@@ -11,12 +11,12 @@
    limitations under the License.
  */
 export interface TimeAccountDto {
-    id?: string;
-    name: string;
-    description: string;
-    duration: number; // duration in minutes
-    startDate: Date;
-    endDate: Date;
-    managerId: string;
-    userIds: string[];
+  id?: string;
+  name: string;
+  description: string;
+  duration: number; // duration in minutes
+  startDate: Date;
+  endDate: Date;
+  managerId: string;
+  userIds: string[];
 }
