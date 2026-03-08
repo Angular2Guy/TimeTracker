@@ -10,13 +10,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 
 export function Main() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);  
+
+  useEffect(() => {      
+    (!GlobalState.jwtToken || GlobalState.jwtToken.length < 10) && navigate("/login");
+  }, []);
 
   return (
     <div>
