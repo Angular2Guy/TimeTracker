@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+import { useNavigate } from "react-router";
 import GlobalState from "~/global-state";
 import type { LoginRequest, LoginResponse } from "~/model/login";
 
@@ -93,6 +94,7 @@ interface RefreshToken {
 }
 
 export const updateToken = () => {
+  const navigate = useNavigate();
   setInterval(async () => {
     const abortController = new AbortController();
     const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
@@ -105,6 +107,11 @@ export const updateToken = () => {
       signal: abortController.signal,
     });
     const result = await handleResponse<RefreshToken>(response);
+    if(!result?.token) {
+      GlobalState.jwtToken = "";
+      navigate("/");
+      return;
+    }
     GlobalState.jwtToken = result.token;
   }, 40 * 1000);
 };
