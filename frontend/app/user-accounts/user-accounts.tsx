@@ -14,15 +14,43 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import SideBar from "~/sidebar/sidebar";
 import styles from "./user-accounts.module.css";
+import Button from "@mui/material/Button";
+import Icon from '@mui/material/Icon';
+import { IconButton } from "@mui/material";
 
 export function UserAccounts() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
 
+    const save = () => {
+      console.log("Save button clicked");
+    }
+
+    const prev = () => {
+      console.log("Previous button clicked");
+    }
+
+    const next = () => {
+      console.log("Next button clicked");
+    }
+
   return (
     <div>
-      <SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts" />
-      <div className={styles.first}>TimeAccounts Page</div>
+      <SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts" />      
+      <div className={styles.first}></div>
+      <div className={[styles.buttonRow].join(" ")}>
+        <Button variant="outlined" onClick={save}>
+          Save
+        </Button>
+        <div className="{styles.iconBtn}">
+          <IconButton color="primary" onClick={prev}>
+            <Icon>chevron_left</Icon>
+          </IconButton>
+          <IconButton color="primary" onClick={next}>
+            <Icon>chevron_right</Icon>
+          </IconButton>
+        </div>        
+      </div>
     </div>
   );
 }

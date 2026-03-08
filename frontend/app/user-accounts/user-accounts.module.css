@@ -11,5 +11,22 @@
    limitations under the License.
  */
 .first {
-  margin-top: 64px;
+  /*margin-top: 64px;*/
+  margin-top: 74px;
+}
+
+.baseContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;  
+  margin: 10px;
+}
+
+.iconBtn {
+  display: flex;
+  gap: 10px;
 }
