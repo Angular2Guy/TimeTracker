@@ -55,9 +55,6 @@ export function TimeAccounts() {
   const [users, setUsers] = useState([] as UserDto[]);
   const [selectedUsers, setSelectedUsers] = useState([] as UserDto[]);
   const [selectedUser, setSelectedUser] = useState(null as UserDto | null);
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(
-    GlobalState.jwtToken,
-  );
   const [globalRolesState, setGlobalRolesState] = useAtom(GlobalState.roles);
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const tableRef = useRef<HTMLDivElement | null>(null);
@@ -77,7 +74,7 @@ export function TimeAccounts() {
     }
     selectedRow.userIds = selectedUsers.map((u) => u.id);
     postTimeAccount(
-      globalJwtTokenState,
+      GlobalState.jwtToken,
       selectedRow as TimeAccountDto,
       controller.current,
     )
@@ -244,7 +241,7 @@ export function TimeAccounts() {
       //controller.current.abort();
     }
     controller.current = new AbortController();
-    getUsers(globalJwtTokenState, controller.current)
+    getUsers(GlobalState.jwtToken, controller.current)
       .then((data) => {
         setUsers(data);
       })
@@ -252,7 +249,7 @@ export function TimeAccounts() {
         console.error("Error fetching users:", error);
       });
     getTimeAccountsByManager(
-      globalJwtTokenState,
+      GlobalState.jwtToken,
       globalUserIdState,
       controller.current,
     )

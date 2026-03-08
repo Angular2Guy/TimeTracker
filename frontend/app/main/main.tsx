@@ -10,27 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 
 export function Main() {
   const navigate = useNavigate();
-  const [showSidebar, setShowSidebar] = useState(false);
-  const x = true;
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(
-    GlobalState.jwtToken,
-  );
-
-  useEffect(() => {
-    if (!globalJwtTokenState || globalJwtTokenState.length === 0) {
-      navigate("/login");
-    } else {
-      setShowSidebar(true);
-    }
-  }, [globalJwtTokenState]);
+  const [showSidebar, setShowSidebar] = useState(false);  
 
   return (
     <div>

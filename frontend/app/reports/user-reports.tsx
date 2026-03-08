@@ -10,20 +10,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { useAtom } from "jotai";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import GlobalState from "~/global-state";
 import SideBar from "~/sidebar/sidebar";
 import styles from "./user-reports.module.css";
-import type { UserDto } from "~/model/user";
 
 export function UserReports() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
-  const [globalJwtTokenState, setGlobalJwtTokenState] = useAtom(
-    GlobalState.jwtToken,
-  );
 
   return (
     <div>
