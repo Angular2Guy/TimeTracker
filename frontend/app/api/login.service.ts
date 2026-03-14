@@ -93,8 +93,7 @@ interface RefreshToken {
   token: string;
 }
 
-export const updateToken = () => {
-  const navigate = useNavigate();
+export const updateToken = () => {  
   setInterval(async () => {
     const abortController = new AbortController();
     const response = await fetch(`${apiUrl}${apiPrefix}/login/refresh`, {
@@ -109,7 +108,8 @@ export const updateToken = () => {
     const result = await handleResponse<RefreshToken>(response);
     if(!result?.token) {
       GlobalState.jwtToken = "";
-      navigate("/");
+      window.location.href = "/";
+      window.location.reload();
       return;
     }
     GlobalState.jwtToken = result.token;
