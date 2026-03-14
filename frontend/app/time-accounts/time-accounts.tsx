@@ -60,6 +60,7 @@ export function TimeAccounts() {
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
   const [tableData, setTableData] = useState<TimeAccountDto[]>([]);
+  const usersRef = useRef<UserDto[]>([]);
 
   const removeUserFromSelectedUsers = (user: UserDto) => {
     setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
@@ -199,7 +200,8 @@ export function TimeAccounts() {
 
         // register selection event handlers via `on` to match typings
         table.on("rowSelected", (row: any) => {
-          selectedRowRef.current = row.getData();
+          selectedRowRef.current = row.getData();           
+          setSelectedUsers(usersRef.current.filter((u) => (row.getData().userIds as string[])?.includes(u.id)));          
         });
 
         tableInstanceRef.current = table;
@@ -218,6 +220,8 @@ export function TimeAccounts() {
       tableInstanceRef.current = null;
     };
   }, []);
+
+  useEffect(() => { usersRef.current = users; }, [users]);
 
   // Update Tabulator when tableData state changes
   useEffect(() => {
@@ -254,7 +258,7 @@ export function TimeAccounts() {
       controller.current,
     )
       .then((data) => {
-        setTableData(data);
+        setTableData(data);        
       })
       .catch((error) => {
         console.error("Error fetching time accounts:", error);
