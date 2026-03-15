@@ -20,21 +20,24 @@ import { IconButton } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { DateTime } from "luxon";
 
 export function UserAccounts() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(DateTime.now());
+
 
     const save = () => {
       console.log("Save button clicked");
     }
 
     const prev = () => {
-      console.log("Previous button clicked");
+      setSelectedDate(selectedDate.minus({ days: 1 }));
     }
 
     const next = () => {
-      console.log("Next button clicked");
+      setSelectedDate(selectedDate.plus({ days: 1 }));
     }
 
   return (
@@ -47,7 +50,7 @@ export function UserAccounts() {
           Save
         </Button>
         <div>
-          <DatePicker label="Basic date picker" />
+          <DatePicker label="Basic date picker" value={selectedDate} onChange={value => setSelectedDate(!value ? DateTime.now() : value)} />
         </div>
         <div className="{styles.iconBtn}">
           <IconButton color="primary" onClick={prev}>
