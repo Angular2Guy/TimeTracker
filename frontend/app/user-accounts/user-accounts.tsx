@@ -17,6 +17,9 @@ import styles from "./user-accounts.module.css";
 import Button from "@mui/material/Button";
 import Icon from '@mui/material/Icon';
 import { IconButton } from "@mui/material";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 export function UserAccounts() {
   const navigate = useNavigate();
@@ -38,10 +41,14 @@ export function UserAccounts() {
     <div>
       <SideBar drawerOpen={showSidebar} toolbarTitle="Time Accounts" />      
       <div className={styles.first}></div>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
       <div className={[styles.buttonRow].join(" ")}>
         <Button variant="outlined" onClick={save}>
           Save
         </Button>
+        <div>
+          <DatePicker label="Basic date picker" />
+        </div>
         <div className="{styles.iconBtn}">
           <IconButton color="primary" onClick={prev}>
             <Icon>chevron_left</Icon>
@@ -51,6 +58,7 @@ export function UserAccounts() {
           </IconButton>
         </div>        
       </div>
+      </LocalizationProvider>
     </div>
   );
 }
