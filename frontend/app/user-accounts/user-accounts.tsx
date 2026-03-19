@@ -16,16 +16,19 @@ import SideBar from "~/sidebar/sidebar";
 import styles from "./user-accounts.module.css";
 import Button from "@mui/material/Button";
 import Icon from '@mui/material/Icon';
-import { IconButton } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { DateTime } from "luxon";
 
 export function UserAccounts() {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(DateTime.now());
+  const [startTime, setStartTime] = useState(DateTime.now());
+  const [endTime, setEndTime] = useState(DateTime.now());
+  const [timeWorked, setTimeWorked] = useState("0:00");
 
 
     const save = () => {
@@ -60,6 +63,22 @@ export function UserAccounts() {
             <Icon>chevron_right</Icon>
           </IconButton>
         </div>        
+      </div>
+      <div className={styles.timeRow}>
+        <div>
+            <TimePicker label="Start Time" value={startTime} onChange={value => setStartTime(!value ? DateTime.now() : value)} />
+        </div>  
+        <div>
+          <TextField          
+          id="outlined-required"
+          label="Time worked"
+          value={timeWorked}
+          onChange={event => setTimeWorked(event.target.value)}
+        />
+        </div>
+        <div>
+            <TimePicker label="End Time" value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
+        </div>
       </div>
       </LocalizationProvider>
     </div>

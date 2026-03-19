@@ -12,7 +12,7 @@
  */
 .first {
   /*margin-top: 64px;*/
-  margin-top: 74px;
+  margin-top: 84px;
 }
 
 .baseContainer {
@@ -23,10 +23,16 @@
 .buttonRow {
   display: flex;
   justify-content: space-between;  
-  margin: 10px;
+  margin: 20px;
 }
 
 .iconBtn {
   display: flex;
   gap: 10px;
+}
+
+.timeRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
 }

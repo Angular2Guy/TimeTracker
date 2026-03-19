@@ -44,7 +44,7 @@ export const postLogin = async function (
   password1: string,
   controller: AbortController | null,
 ): Promise<LoginResponse> {
-  const requestOptions = loginSigninOptions(email, "", password1, controller);
+  const requestOptions = loginSigninOptions(email, "", password1, controller);  
   const result = await fetch(
     `${apiUrl}${apiPrefix}/login/login`,
     requestOptions,
