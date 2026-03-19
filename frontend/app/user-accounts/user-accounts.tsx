@@ -66,7 +66,7 @@ export function UserAccounts() {
       </div>
       <div className={styles.timeRow}>
         <div>
-            <TimePicker label="Start Time" value={startTime} onChange={value => setStartTime(!value ? DateTime.now() : value)} />
+            <TimePicker label="Start Time" ampm={false} value={startTime} onChange={value => setStartTime(!value ? DateTime.now() : value)} />
         </div>  
         <div>
           <TextField          
@@ -77,7 +77,7 @@ export function UserAccounts() {
         />
         </div>
         <div>
-            <TimePicker label="End Time" value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
+            <TimePicker label="End Time" ampm={false} value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
         </div>
       </div>
       </LocalizationProvider>
