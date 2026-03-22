@@ -31,13 +31,15 @@ export function UserAccounts() {
   const [endTime, setEndTime] = useState(DateTime.now());
   const [pauseTime, setPauseTime] = useState(0);
   //const [timeWorked, setTimeWorked] = useState("0:00");
-  // TODO calculate time worked based on start and end time and pause time
+  
   const timeWorked = useMemo(() => {
-    const diff = endTime.diff(startTime, ["hours", "minutes"]);
-    const hours = Math.floor(diff.hours);
-    const minutes = Math.round(diff.minutes);
+    const diff = endTime.diff(startTime, ["minutes"]);    
+    let minutes = Math.round(diff.minutes - pauseTime);
+    minutes = Math.max(minutes, 0);
+    const hours = Math.floor(minutes / 60);
+    minutes = Math.round(minutes - hours * 60);
     return `${hours}:${minutes.toString().padStart(2, "0")}`;
-  }, [startTime, endTime]);
+  }, [startTime, endTime, pauseTime]);
 
 
     const save = () => {
