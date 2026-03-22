@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import SideBar from "~/sidebar/sidebar";
 import styles from "./user-accounts.module.css";
@@ -20,6 +20,7 @@ import { IconButton, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import NumberField from "~/number-field/NumberField";
 import { DateTime } from "luxon";
 
 export function UserAccounts() {
@@ -28,7 +29,15 @@ export function UserAccounts() {
   const [selectedDate, setSelectedDate] = useState(DateTime.now());
   const [startTime, setStartTime] = useState(DateTime.now());
   const [endTime, setEndTime] = useState(DateTime.now());
-  const [timeWorked, setTimeWorked] = useState("0:00");
+  const [pauseTime, setPauseTime] = useState(0);
+  //const [timeWorked, setTimeWorked] = useState("0:00");
+  // TODO calculate time worked based on start and end time and pause time
+  const timeWorked = useMemo(() => {
+    const diff = endTime.diff(startTime, ["hours", "minutes"]);
+    const hours = Math.floor(diff.hours);
+    const minutes = Math.round(diff.minutes);
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+  }, [startTime, endTime]);
 
 
     const save = () => {
@@ -67,17 +76,19 @@ export function UserAccounts() {
       <div className={styles.timeRow}>
         <div>
             <TimePicker label="Start Time" ampm={false} value={startTime} onChange={value => setStartTime(!value ? DateTime.now() : value)} />
-        </div>  
+        </div>          
+        <div>
+            <TimePicker label="End Time" ampm={false} value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
+        </div>
+        <div>
+          <NumberField label="Pause time" min={0} value={pauseTime} onChange={value => setPauseTime(Number(value))} />
+        </div>
         <div>
           <TextField          
           id="outlined-required"
           label="Time worked"
-          value={timeWorked}
-          onChange={event => setTimeWorked(event.target.value)}
+          value={timeWorked}          
         />
-        </div>
-        <div>
-            <TimePicker label="End Time" ampm={false} value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
         </div>
       </div>
       </LocalizationProvider>
