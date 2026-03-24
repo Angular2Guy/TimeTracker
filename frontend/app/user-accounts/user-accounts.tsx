@@ -20,7 +20,7 @@ import { IconButton, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
-import NumberField from "~/number-field/NumberField";
+import NumberField from "~/number-field/number-field";
 import { DateTime } from "luxon";
 
 export function UserAccounts() {
@@ -83,7 +83,7 @@ export function UserAccounts() {
             <TimePicker label="End Time" ampm={false} value={endTime} onChange={value => setEndTime(!value ? DateTime.now() : value)} />
         </div>
         <div>
-          <NumberField label="Pause time" min={0} value={pauseTime} onChange={value => setPauseTime(Number(value))} />
+          <NumberField label="Pause time" min={0} value={pauseTime} onValueChange={value => setPauseTime(Number(value))} />
         </div>
         <div>
           <TextField          
