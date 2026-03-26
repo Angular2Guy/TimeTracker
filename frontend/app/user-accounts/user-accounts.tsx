@@ -10,12 +10,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import SideBar from "~/sidebar/sidebar";
 import styles from "./user-accounts.module.css";
 import Button from "@mui/material/Button";
 import Icon from '@mui/material/Icon';
+import { TabulatorFull as Tabulator } from "tabulator-tables";
+import "tabulator-tables/dist/css/tabulator.min.css";
 import { IconButton, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
@@ -31,6 +33,13 @@ export function UserAccounts() {
   const [endTime, setEndTime] = useState(DateTime.now());
   const [pauseTime, setPauseTime] = useState(0);
   //const [timeWorked, setTimeWorked] = useState("0:00");
+  const [tableData, setTableData] = useState([
+    { id: 1, name: "Project A", time: 120, timeRemaining: 20 },
+    { id: 2, name: "Project B", time: 80, timeRemaining: 60 },
+    { id: 3, name: "Project C", time: 200, timeRemaining: 0 },
+  ]);
+  const tableRef = useRef<HTMLDivElement | null>(null);
+  const tableInstanceRef = useRef<any | null>(null);
   
   const timeWorked = useMemo(() => {
     const diff = endTime.diff(startTime, ["minutes"]);    
@@ -41,8 +50,60 @@ export function UserAccounts() {
     return `${hours}:${minutes.toString().padStart(2, "0")}`;
   }, [startTime, endTime, pauseTime]);
 
+  useEffect(() => {
+    if (!tableRef.current) return;
 
-    const save = () => {
+    const table = new Tabulator(tableRef.current, {
+      height: "auto",
+      data: tableData,
+      layout: "fitColumns",
+      columns: [
+        { title: "Name", field: "name", editor: "input" },
+        {
+          title: "Time",
+          field: "time",
+          editor: "input",
+          hozAlign: "right",
+          formatter: "money",
+          formatterParams: { decimal: ".", thousand: ",", precision: 0 },
+        },
+        { title: "Time remaining", field: "timeRemaining", hozAlign: "right" },
+      ],
+      cellEdited: (cell: any) => {
+        const row = cell.getRow().getData();
+        const value = Number(cell.getValue());
+        setTableData((prev) =>
+          prev.map((r) =>
+            r.id === row.id
+              ? {
+                  ...r,
+                  time: Number.isNaN(value) ? r.time : value,
+                  timeRemaining: Math.max(r.timeRemaining - (value - r.time), 0),
+                }
+              : r,
+          ),
+        );
+      },
+    });
+
+    tableInstanceRef.current = table;
+
+    return () => {
+      tableInstanceRef.current?.destroy();
+      tableInstanceRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const table = tableInstanceRef.current;
+    if (table && Array.isArray(tableData)) {
+      table.replaceData(tableData).catch(() => {
+        table.setData(tableData);
+      });
+    }
+  }, [tableData]);
+
+  const save = () => {
       console.log("Save button clicked");
     }
 
@@ -92,6 +153,9 @@ export function UserAccounts() {
           value={timeWorked}          
         />
         </div>
+      </div>
+      <div style={{ width: '100%', marginTop: '24px' }}>
+        <div ref={tableRef} style={{ width: '100%' }} />
       </div>
       </LocalizationProvider>
     </div>
