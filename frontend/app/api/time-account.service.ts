@@ -15,7 +15,7 @@ import type { TimeAccountDto } from "~/model/time-account";
 
 export const getTimeAccountsByManager = async (
   jwtToken: string,
-  managerId: string,
+  managerId: string,  
   controller: AbortController | null,
 ) => {
   const requestOptions = request(jwtToken, controller);
@@ -25,6 +25,20 @@ export const getTimeAccountsByManager = async (
   );
   return handleResponse<TimeAccountDto[]>(result);
 };
+
+export const getTimeAccountsByUser = async (
+  jwtToken: string,
+  userId: string,
+  date: Date,
+  controller: AbortController | null,
+) => {
+  const requestOptions = request(jwtToken, controller);
+  const result = await fetch(
+    `${apiUrl}${apiPrefix}/account/user/${userId}/day/${date.toISOString().split('T')[0]}`,
+    requestOptions,
+  );
+  return handleResponse<TimeAccountDto[]>(result);
+}
 
 export const postTimeAccount = async (
   jwtToken: string,
