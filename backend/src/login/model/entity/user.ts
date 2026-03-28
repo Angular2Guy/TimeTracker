@@ -12,7 +12,7 @@
  */
 import { TimeAccount } from "src/account/model/entity/time-account";
 import { TTBaseEntity } from "../../../common/model/entity/base";
-import {Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
+import {Column, Entity, ManyToMany } from "typeorm";
 
 export enum UserRole {
     USER = 'user',

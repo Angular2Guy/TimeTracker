@@ -12,6 +12,11 @@ export class AccountController {
         return value;            
     }
 
+  @Get('/user/:userId/day/:date')
+  public async getTimeAccounts(@Param('userId') userId: string, @Param('date') date: string): Promise<AccountDto[]> {
+    return this.accountService.getUserAccounts(userId, date);
+  }
+
     @Post('/:userUuid')
     public async saveAccount(@Param('userUuid') userUuid: string, @Body() accountDto: AccountDto): Promise<AccountDto> {        
         const value = await this.accountService.saveAccount(userUuid, accountDto);                    

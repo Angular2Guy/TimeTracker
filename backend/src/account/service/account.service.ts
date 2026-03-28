@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { timeAccountRepoKey } from '../model/entity/time-account.providers';
 import { TimeAccount } from '../model/entity/time-account';
-import { In, Repository } from 'typeorm';
+import { In, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { AccountDto } from '../model/dto/account-dto';
 import { userRepoKey } from 'src/login/model/entity/user.providers';
 import { User } from 'src/login/model/entity/user';
@@ -15,6 +15,29 @@ export class AccountService {
 
     public async getAccountsForManager(managerId: string): Promise<AccountDto[]> {
         const accountEntities = await this.timeAccountRepository.find({where: {managerId: managerId}, relations: {users: true}});
+        return accountEntities.map(accountEntity => ({
+            id: accountEntity.id,
+            name: accountEntity.name,
+            description: accountEntity.description,
+            duration: accountEntity.duration,
+            startDate: accountEntity.startDate,
+            endDate: accountEntity.endDate,
+            managerId: accountEntity.managerId,
+            userIds: accountEntity.users.map(user => user.id)
+        }));
+    }
+
+    public async getUserAccounts(userId: string, date: string): Promise<AccountDto[]> {
+        //this.logger.debug(`Getting accounts for user ${userId} and date ${date}`);
+        const dateObj = new Date(date);
+        const accountEntities = await this.timeAccountRepository
+          .find({where: {users: {id: userId}, startDate: LessThanOrEqual(dateObj), endDate: MoreThanOrEqual(dateObj)}, relations: {users: true}});
+/*
+        .createQueryBuilder('account')
+            .innerJoin('account.users', 'user', 'user.id = :userId', { userId })
+            .getMany();
+*/
+        //this.logger.debug(`Found ${accountEntities.length} accounts for user ${userId}`);
         return accountEntities.map(accountEntity => ({
             id: accountEntity.id,
             name: accountEntity.name,
