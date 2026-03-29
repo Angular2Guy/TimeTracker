@@ -30,6 +30,7 @@ import { getTimeAccountsByUser } from "~/api/time-account.service";
 import type { UserAccountDto } from "~/model/user-account";
 
 interface TableRow {
+  id: string;
   name: string;
   description: string;
   time: number;
@@ -117,6 +118,7 @@ export function UserAccounts() {
       controller.current,
     ).then((data) => {        
         setTableData(data.flatMap((account) => ({
+          id: account.id || "",
           name: account.name,
           description: account.description,
           time: 0,
