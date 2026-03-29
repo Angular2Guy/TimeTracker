@@ -27,7 +27,7 @@ import { DateTime } from "luxon";
 import GlobalState from "~/global-state";
 import { useAtom } from "jotai/react/useAtom";
 import { getTimeAccountsByUser } from "~/api/time-account.service";
-import type { UserAccountDto } from "~/model/user-account";
+import type { TimeAccountDto } from "~/model/time-account";
 
 interface TableRow {
   id: string;
@@ -36,6 +36,7 @@ interface TableRow {
   time: number;
   timeRemaining: number;
   userId: string;  
+  timeAccount: TimeAccountDto;
 }
 
 export function UserAccounts() {
