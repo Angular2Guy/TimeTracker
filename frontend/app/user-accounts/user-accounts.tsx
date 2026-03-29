@@ -24,14 +24,19 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import NumberField from "~/number-field/number-field";
 import { DateTime } from "luxon";
+import GlobalState from "~/global-state";
+import { useAtom } from "jotai/react/useAtom";
+import { getTimeAccountsByUser } from "~/api/time-account.service";
 
 export function UserAccounts() {
+  let controller = useRef<AbortController | null>(null);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(DateTime.now());
   const [startTime, setStartTime] = useState(DateTime.now());
   const [endTime, setEndTime] = useState(DateTime.now());
   const [pauseTime, setPauseTime] = useState(0);
+  const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   //const [timeWorked, setTimeWorked] = useState("0:00");
   const [tableData, setTableData] = useState([
     { id: 1, name: "Project A", time: 120, timeRemaining: 20 },
@@ -92,6 +97,27 @@ export function UserAccounts() {
       tableInstanceRef.current?.destroy();
       tableInstanceRef.current = null;
     };
+  }, []);
+
+  useEffect(() => {
+    if (!!controller.current && tableData.length > 0) {
+      return;
+      //controller.current.abort();
+    }
+    controller.current = new AbortController();    
+    getTimeAccountsByUser(
+      GlobalState.jwtToken,
+      globalUserIdState,
+      selectedDate.toJSDate(),
+      controller.current,
+    )
+      .then((data) => {
+        // TODO: map data to table format
+        //setTableData(data);        
+      })
+      .catch((error) => {
+        console.error("Error fetching time accounts:", error);
+      });
   }, []);
 
   useEffect(() => {
