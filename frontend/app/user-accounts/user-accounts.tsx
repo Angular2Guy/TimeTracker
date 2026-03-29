@@ -27,6 +27,15 @@ import { DateTime } from "luxon";
 import GlobalState from "~/global-state";
 import { useAtom } from "jotai/react/useAtom";
 import { getTimeAccountsByUser } from "~/api/time-account.service";
+import type { UserAccountDto } from "~/model/user-account";
+
+interface TableRow {
+  name: string;
+  description: string;
+  time: number;
+  timeRemaining: number;
+  userId: string;  
+}
 
 export function UserAccounts() {
   let controller = useRef<AbortController | null>(null);
@@ -37,12 +46,7 @@ export function UserAccounts() {
   const [endTime, setEndTime] = useState(DateTime.now());
   const [pauseTime, setPauseTime] = useState(0);
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
-  //const [timeWorked, setTimeWorked] = useState("0:00");
-  const [tableData, setTableData] = useState([
-    { id: 1, name: "Project A", time: 120, timeRemaining: 20 },
-    { id: 2, name: "Project B", time: 80, timeRemaining: 60 },
-    { id: 3, name: "Project C", time: 200, timeRemaining: 0 },
-  ]);
+  const [tableData, setTableData] = useState([] as TableRow[]);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const tableInstanceRef = useRef<any | null>(null);
   
@@ -63,7 +67,8 @@ export function UserAccounts() {
       data: tableData,
       layout: "fitColumns",
       columns: [
-        { title: "Name", field: "name", editor: "input" },
+        { title: "Name", field: "name" },
+        { title: "Description", field: "description" },
         {
           title: "Time",
           field: "time",
@@ -110,10 +115,15 @@ export function UserAccounts() {
       globalUserIdState,
       selectedDate.toJSDate(),
       controller.current,
-    )
-      .then((data) => {
-        // TODO: map data to table format
-        //setTableData(data);        
+    ).then((data) => {        
+        setTableData(data.flatMap((account) => ({
+          name: account.name,
+          description: account.description,
+          time: 0,
+          timeRemaining: account.duration,
+          userId: globalUserIdState,
+          timeAccount: account,
+        } as TableRow)));
       })
       .catch((error) => {
         console.error("Error fetching time accounts:", error);
