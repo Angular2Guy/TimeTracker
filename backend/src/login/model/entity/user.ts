@@ -20,7 +20,7 @@ export enum UserRole {
     ADMIN = 'admin',
   }
 
-@Entity()
+@Entity({name: 'user1'})
 export class User extends TTBaseEntity {  
     @Column({type: 'varchar', length: 100})
     email: string;

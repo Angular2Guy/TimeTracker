@@ -27,17 +27,32 @@ export class AccountService {
         }));
     }
 
-    public async getUserAccounts(userId: string, date: string): Promise<AccountDto[]> {
-        //this.logger.debug(`Getting accounts for user ${userId} and date ${date}`);
+    public async getUserAccounts(userId: string, date: string): Promise<AccountDto[]> {        
         const dateObj = new Date(date);
+        this.logger.debug(`DateObj: ${dateObj} for user ${userId} and date ${date}`);
+        
         const accountEntities = await this.timeAccountRepository
-          .find({where: {users: {id: userId}, startDate: LessThanOrEqual(dateObj), endDate: MoreThanOrEqual(dateObj)}, relations: {users: true}});
-/*
-        .createQueryBuilder('account')
+            .createQueryBuilder('account')
             .innerJoin('account.users', 'user', 'user.id = :userId', { userId })
+            .where('account.startDate <= :dateObj', { dateObj })
+            .andWhere('account.endDate >= :dateObj', { dateObj })
+            .leftJoinAndSelect('account.users', 'users')
             .getMany();
+/*
+        const query = this.timeAccountRepository
+    .createQueryBuilder('account')
+    .innerJoin('account.users', 'user', 'user.id = :userId', { userId })
+    .where('account.startDate <= :dateObj', { dateObj })
+    .andWhere('account.endDate >= :dateObj', { dateObj })
+    .leftJoinAndSelect('account.users', 'users');
+
+this.logger.debug('SQL:', query.getSql());
+this.logger.debug('Parameters:', query.getParameters());
+
+const accountEntities = await query.getMany();
 */
-        //this.logger.debug(`Found ${accountEntities.length} accounts for user ${userId}`);
+
+        this.logger.debug(`Found ${accountEntities.length} accounts for user ${userId}`);
         return accountEntities.map(accountEntity => ({
             id: accountEntity.id,
             name: accountEntity.name,
