@@ -25,9 +25,9 @@ import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import NumberField from "~/number-field/number-field";
 import { DateTime } from "luxon";
 import GlobalState from "~/global-state";
-import { useAtom } from "jotai/react/useAtom";
 import { getTimeAccountsByUser } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
+import { useAtom } from "jotai";
 
 interface TableRow {
   id: string;

@@ -71,7 +71,10 @@ const request = (
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwtToken}`,
-    },
+      'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    },    
     signal: controller?.signal,
     body: null as null | string,
   };
