@@ -62,6 +62,11 @@ export function UserAccounts() {
   }, [startTime, endTime, pauseTime]);
 
   useEffect(() => {
+    console.log("Selected date changed:", selectedDate.toISODate());
+    loadData();
+  }, [selectedDate]);
+
+  useEffect(() => {
     if (!tableRef.current) return;
 
     const table = new Tabulator(tableRef.current, {
@@ -107,9 +112,12 @@ export function UserAccounts() {
   }, []);
 
   useEffect(() => {
-    if (!!controller.current && tableData.length > 0) {
-      return;
-      //controller.current.abort();
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    if (!!controller.current) {
+      controller.current.abort();
     }
     controller.current = new AbortController();    
     getTimeAccountsByUser(
@@ -131,7 +139,7 @@ export function UserAccounts() {
       .catch((error) => {
         console.error("Error fetching time accounts:", error);
       });
-  }, []);
+    };
 
   useEffect(() => {
     const table = tableInstanceRef.current;
