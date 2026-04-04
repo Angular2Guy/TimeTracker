@@ -11,15 +11,29 @@
    limitations under the License.
  */
 import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
+import { TimeDto } from '../model/dto/time-dto';
 
 @Injectable()
 export class TimeService {
     constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>) {}
   
-  getHello(): string {
-    return 'Hello World!';
+  getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
+    return this.timeEntryRepository.find({
+      where: {
+        entryDate: date,
+        timeAccount: {
+          id: In(accountIds)
+        }
+      }
+    }).then(entries => entries.map(entry => ({
+      id: entry.id,
+      comment: entry.comment,
+      duration: entry.duration,
+      entryDate: entry.entryDate,
+      timeAccountId: entry.timeAccount.id
+    })));
   }
 }

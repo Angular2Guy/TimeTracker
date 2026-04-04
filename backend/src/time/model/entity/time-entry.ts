@@ -10,8 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+import { TimeAccount } from "src/account/model/entity/time-account";
 import { TTBaseEntity } from "../../../common/model/entity/base";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
 export class TimeEntry extends TTBaseEntity {
@@ -23,4 +24,7 @@ export class TimeEntry extends TTBaseEntity {
 
     @Column({type: 'timestamptz'})
     entryDate: Date;
+
+    @ManyToOne(() => TimeAccount, (timeAccount) => timeAccount.id)
+    timeAccount: TimeAccount;
 }

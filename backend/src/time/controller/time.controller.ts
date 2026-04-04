@@ -10,18 +10,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { TimeService } from '../service/time.service';
 import { UserRole } from 'src/login/model/entity/user';
 import { Roles } from '../../common/security/roles-decorator';
+import { TimeDto } from '../model/dto/time-dto';
 
 @Roles(UserRole.USER)
 @Controller('/rest/time')
 export class TimeController {
   constructor(private readonly timeService: TimeService) {}
 
-  @Get('/day')
-  getHello(): string {
-    return this.timeService.getHello();
+  @Get('/day/:date/accounts/:accountIds')
+  getTimes(@Param('date') date: string, @Param('accountIds') accountIds: string): Promise<TimeDto[]> {    
+    return this.timeService.getTimes(new Date(Date.parse(date)), accountIds.split(',').map(id => id.trim()));
   }
 }

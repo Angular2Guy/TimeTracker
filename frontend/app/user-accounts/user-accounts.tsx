@@ -75,7 +75,7 @@ export function UserAccounts() {
       layout: "fitColumns",
       columns: [
         { title: "Name", field: "name" },
-        { title: "Description", field: "description" },
+        { title: "Description", field: "description", editor: "input" },
         {
           title: "Time",
           field: "time",
@@ -129,7 +129,7 @@ export function UserAccounts() {
         setTableData(data.flatMap((account) => ({
           id: account.id || "",
           name: account.name,
-          description: account.description,
+          description: '',
           time: 0,
           timeRemaining: account.duration,
           userId: globalUserIdState,
@@ -151,7 +151,7 @@ export function UserAccounts() {
   }, [tableData]);
 
   const save = () => {
-      console.log("Save button clicked");
+      console.log(tableData);
     }
 
     const prev = () => {

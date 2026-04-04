@@ -12,7 +12,7 @@
  */
 import { TTBaseEntity } from "../../../common/model/entity/base";
 import { User } from "../../../login/model/entity/user";
-import {  Column, Entity, JoinTable, ManyToMany } from "typeorm";
+import {  Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 
 @Entity()
 export class TimeAccount extends TTBaseEntity {
@@ -36,5 +36,8 @@ export class TimeAccount extends TTBaseEntity {
 
     @ManyToMany(() => User, (user) => user.timeAccounts)
     @JoinTable()
-    users: User[]   
+    users: User[]  
+    
+    @ManyToOne(() => TimeAccount, (timeAccount) => timeAccount.id)
+    timeAccount: TimeAccount;
 }
