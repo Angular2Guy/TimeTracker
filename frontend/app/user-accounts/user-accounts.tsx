@@ -28,11 +28,13 @@ import GlobalState from "~/global-state";
 import { getTimeAccountsByUser } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { useAtom } from "jotai";
+import { getUserTimeByIdAndDay } from "~/api/user-account.service";
 
 interface TableRow {
   id: string;
   name: string;
   description: string;
+  comment: string;
   time: number;
   timeRemaining: number;
   userId: string;  
@@ -119,18 +121,25 @@ export function UserAccounts() {
     if (!!controller.current) {
       controller.current.abort();
     }
-    controller.current = new AbortController();    
+    controller.current = new AbortController();        
     getTimeAccountsByUser(
       GlobalState.jwtToken,
       globalUserIdState,
       selectedDate.toJSDate(),
       controller.current,
-    ).then((data) => {        
+    ).then(async (data) => {        
+      const userAccounts = await getUserTimeByIdAndDay(
+      selectedDate.toJSDate(),
+      data.filter((row) => row?.id).map((row) => row.id) as string[],
+      GlobalState.jwtToken,
+      controller.current
+      );
         setTableData(data.flatMap((account) => ({
           id: account.id || "",
           name: account.name,
           description: '',
-          time: 0,
+          comment: userAccounts.find(a => a.timeAccountId === account.id)?.comment || '',
+          time: userAccounts.find(a => a.timeAccountId === account.id)?.duration || 0,
           timeRemaining: account.duration,
           userId: globalUserIdState,
           timeAccount: account,

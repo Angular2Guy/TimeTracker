@@ -15,10 +15,10 @@ import type { UserAccountDto } from "~/model/user-account"
 import { HttpMethod, request } from "./time-account.service";
 import { apiPrefix, apiUrl, handleResponse } from "./login.service";
 
-export const getUserTimeByIdAndDay = async (entryDate: Date, timeAccountId: string, jwtToken: string, controller: AbortController | null) => {
+export const getUserTimeByIdAndDay = async (entryDate: Date, timeAccountIds: string[], jwtToken: string, controller: AbortController | null) => {
     const requestOptions = request(jwtToken, controller);
     const result = await fetch(
-        `${apiUrl}${apiPrefix}/day/${entryDate.toISOString().split('T')[0]}/accounts/${timeAccountId}`,
+        `${apiUrl}${apiPrefix}/day/${entryDate.toISOString().split('T')[0]}/accounts/${timeAccountIds.join(',')}`,
         requestOptions,
       );    
     return handleResponse<UserAccountDto[]>(result);
