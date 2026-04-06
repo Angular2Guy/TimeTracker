@@ -61,7 +61,7 @@ export enum HttpMethod {
   DELETE = "DELETE",
 }
 
-const request = (
+export const request = (
   jwtToken: string,
   controller: AbortController | null,
   method: HttpMethod = HttpMethod.GET,
