@@ -31,5 +31,5 @@ export const postUserTime = async (id: string | null, entryDate: Date, comment: 
         `${apiUrl}${apiPrefix}/day/${entryDate.toISOString().split('T')[0]}/accounts/${timeAccountId}`,
         requestOptions,
       );    
-    return handleResponse<UserAccountDto[]>(result);
+    return handleResponse<UserAccountDto>(result);
 }

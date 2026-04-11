@@ -28,7 +28,8 @@ import GlobalState from "~/global-state";
 import { getTimeAccountsByUser } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { useAtom } from "jotai";
-import { getUserTimeByIdAndDay } from "~/api/user-account.service";
+import { getUserTimeByIdAndDay, postUserTime } from "~/api/user-account.service";
+import { table } from "console";
 
 interface TableRow {
   id: string;
@@ -160,7 +161,17 @@ export function UserAccounts() {
   }, [tableData]);
 
   const save = () => {
-      console.log(tableData);
+      console.log(tableData);            
+      tableData.forEach(row => {
+        postUserTime(row.id || null, selectedDate.toJSDate(), row.comment, row.time, row.timeAccount.id || '', GlobalState.jwtToken, controller.current).then((data) => {
+          console.log("Saved user time:", data);
+          row.id = data?.id
+          row.comment = data?.comment;
+          row.time = data?.duration;          
+        }).catch((error) => {
+          console.error("Error saving user time:", error, row);
+        });
+      });
     }
 
     const prev = () => {
