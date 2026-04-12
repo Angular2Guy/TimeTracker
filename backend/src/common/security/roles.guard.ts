@@ -14,12 +14,16 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles-decorator';
+import { AccountService } from 'src/account/service/account.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
+  private readonly logger = new Logger(AccountService.name, { timestamp: true });
+
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -35,10 +39,24 @@ export class RolesGuard implements CanActivate {
       return true; // no role restriction
     }
 
-    const { user } = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
+    const authorization = request.headers?.authorization as string | undefined;    
+    let roles: string[] = [];
 
-    return requiredRoles.some(role =>
-      user?.roles?.includes(role),
-    );
+    if (authorization?.startsWith('Bearer ')) {
+      const token = authorization.substring(7);
+      const payloadSegment = token.split('.')[1];
+      if (payloadSegment) {
+        try {
+          const decoded = Buffer.from(payloadSegment, 'base64').toString('utf8');
+          const payload = JSON.parse(decoded) as { Roles?: string[] };
+          roles = payload.Roles ?? [];
+        } catch {
+          roles = [];
+        }
+      }
+    }
+
+    return requiredRoles.some(role => roles.includes(role));
   }
 }

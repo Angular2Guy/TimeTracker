@@ -16,7 +16,7 @@ import { UserRole } from 'src/login/model/entity/user';
 import { Roles } from '../../common/security/roles-decorator';
 import { TimeDto } from '../model/dto/time-dto';
 
-@Roles(UserRole.USER)
+@Roles(UserRole.USER, UserRole.PM, UserRole.ADMIN)
 @Controller('/rest/time')
 export class TimeController {
   constructor(private readonly timeService: TimeService) {}
