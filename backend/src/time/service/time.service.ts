@@ -10,18 +10,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
 import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
 import { TimeDto } from '../model/dto/time-dto';
+import { AccountService } from 'src/account/service/account.service';
 
 @Injectable()
 export class TimeService {
+  private readonly logger = new Logger(AccountService.name, { timestamp: true });
+  
     constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>) {}
   
   getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
-    return this.timeEntryRepository.find({
+    const result = this.timeEntryRepository.find({
       where: {
         entryDate: date,
         timeAccount: {
@@ -35,5 +38,7 @@ export class TimeService {
       entryDate: entry.entryDate,
       timeAccountId: entry.timeAccount.id
     })));
+    this.logger.log(result)
+    return result;
   }
 }

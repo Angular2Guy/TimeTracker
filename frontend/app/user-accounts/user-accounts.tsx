@@ -29,7 +29,6 @@ import { getTimeAccountsByUser } from "~/api/time-account.service";
 import type { TimeAccountDto } from "~/model/time-account";
 import { useAtom } from "jotai";
 import { getUserTimeByIdAndDay, postUserTime } from "~/api/user-account.service";
-import { table } from "console";
 
 interface TableRow {
   id: string;
