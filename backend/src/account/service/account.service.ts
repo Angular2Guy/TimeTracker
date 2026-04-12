@@ -29,7 +29,7 @@ export class AccountService {
 
     public async getUserAccounts(userId: string, date: string): Promise<AccountDto[]> {        
         const dateObj = new Date(date);
-        this.logger.debug(`DateObj: ${dateObj} for user ${userId} and date ${date}`);
+        //this.logger.debug(`DateObj: ${dateObj} for user ${userId} and date ${date}`);
         
         const accountEntities = await this.timeAccountRepository
             .createQueryBuilder('account')
@@ -52,7 +52,7 @@ this.logger.debug('Parameters:', query.getParameters());
 const accountEntities = await query.getMany();
 */
 
-        this.logger.debug(`Found ${accountEntities.length} accounts for user ${userId}`);
+        //this.logger.debug(`Found ${accountEntities.length} accounts for user ${userId}`);
         return accountEntities.map(accountEntity => ({
             id: accountEntity.id,
             name: accountEntity.name,

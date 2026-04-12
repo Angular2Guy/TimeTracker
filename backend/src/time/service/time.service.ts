@@ -24,6 +24,7 @@ export class TimeService {
     constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>) {}
   
   getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
+    this.logger.debug(`Getting times for date ${date} and accountIds ${accountIds.join(',')}`);
     const result = this.timeEntryRepository.find({
       where: {
         entryDate: date,
@@ -38,7 +39,7 @@ export class TimeService {
       entryDate: entry.entryDate,
       timeAccountId: entry.timeAccount.id
     })));
-    this.logger.log(result)
+    this.logger.debug(result)
     return result;
   }
 }
