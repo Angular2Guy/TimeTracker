@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { TimeAccount } from "src/account/model/entity/time-account";
+import { TimeAccount } from "../../../account/model/entity/time-account";
 import { TTBaseEntity } from "../../../common/model/entity/base";
 import {Column, Entity, ManyToMany } from "typeorm";
 
@@ -22,24 +22,24 @@ export enum UserRole {
 
 @Entity({name: 'user1'})
 export class User extends TTBaseEntity {  
-    @Column({type: 'varchar', length: 100})
-    email: string;
+    @Column({ type: 'varchar', length: 100 })
+  email!: string;
 
-    @Column({type: 'varchar', length: 100})
-    username: string;
+    @Column({ type: 'varchar', length: 100 })
+  username!: string;
 
-    @Column({type: 'varchar', length: 100})
-    password: string; 
+    @Column({ type: 'varchar', length: 100 })
+  password!: string; 
 
-    @Column({type: 'varchar', length: 50})
-    role: UserRole;
+    @Column({ type: 'varchar', length: 50 })
+  role!: UserRole;
 
-    @Column({type: 'varchar', length: 50})
-    uuid: string;
+    @Column({ type: 'varchar', length: 50 })
+  uuid!: string;
     
-    @Column({type: 'boolean'})
-    disabled: boolean;
+    @Column({ type: 'boolean' })
+  disabled!: boolean;
 
     @ManyToMany(() => TimeAccount, (timeAccount) => timeAccount.users)
-    timeAccounts: TimeAccount[];
+  timeAccounts!: TimeAccount[];
 }

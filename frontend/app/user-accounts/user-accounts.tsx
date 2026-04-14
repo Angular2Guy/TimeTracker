@@ -88,21 +88,22 @@ export function UserAccounts() {
         },
         { title: "Time remaining", field: "timeRemaining", hozAlign: "right" },
       ],
-      cellEdited: (cell: any) => {
-        const row = cell.getRow().getData();
-        const value = Number(cell.getValue());
-        setTableData((prev) =>
-          prev.map((r) =>
-            r.id === row.id
-              ? {
-                  ...r,
-                  time: Number.isNaN(value) ? r.time : value,
-                  timeRemaining: Math.max(r.timeRemaining - (value - r.time), 0),
-                }
-              : r,
-          ),
-        );
-      },
+    });
+
+    table.on("cellEdited", (cell: any) => {
+      const row = cell.getRow().getData();
+      const value = Number(cell.getValue());
+      setTableData((prev) =>
+        prev.map((r) =>
+          r.id === row.id
+            ? {
+                ...r,
+                time: Number.isNaN(value) ? r.time : value,
+                timeRemaining: Math.max(r.timeRemaining - (value - r.time), 0),
+              }
+            : r,
+        ),
+      );
     });
 
     tableInstanceRef.current = table;

@@ -15,31 +15,58 @@ import { In, Repository } from 'typeorm';
 import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
 import { TimeDto } from '../model/dto/time-dto';
-import { AccountService } from 'src/account/service/account.service';
 
 @Injectable()
 export class TimeService {
-  private readonly logger = new Logger(AccountService.name, { timestamp: true });
+  private readonly logger = new Logger(TimeService.name, { timestamp: true });
   
     constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>) {}
   
-  getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
+  async getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
     this.logger.debug(`Getting times for date ${date} and accountIds ${accountIds.join(',')}`);
-    const result = this.timeEntryRepository.find({
+    const result = await this.timeEntryRepository.find({
       where: {
         entryDate: date,
         timeAccount: {
           id: In(accountIds)
         }
       }
-    }).then(entries => entries.map(entry => ({
+    });
+    const timeDtos = result.map(entry => ({
       id: entry.id,
       comment: entry.comment,
       duration: entry.duration,
       entryDate: entry.entryDate,
       timeAccountId: entry.timeAccount.id
-    })));
-    this.logger.debug(result)
-    return result;
+    }));
+    this.logger.debug(timeDtos)
+    return timeDtos;
+  }
+
+  async saveTime(date: Date, accountId: string, timeDto: TimeDto): Promise<TimeDto> {
+    this.logger.debug(`Posting time for date ${date}, accountId ${accountId} and timeDto ${JSON.stringify(timeDto)}`);
+    let timeEntry = await this.timeEntryRepository.findOne({ where: { id: timeDto.id, timeAccount: { id: accountId }, entryDate: date } });
+    if (!timeEntry) {
+      timeEntry = this.timeEntryRepository.create({
+        id: timeDto.id,
+        comment: timeDto.comment,
+        duration: timeDto.duration,
+        entryDate: date,
+      timeAccount: {
+        id: accountId
+      }
+    });
+    } else {
+      timeEntry.comment = timeDto.comment;
+      timeEntry.duration = timeDto.duration;
+      timeEntry.entryDate = date;
+    }
+    return this.timeEntryRepository.save(timeEntry).then(savedEntry => ({
+      id: savedEntry.id,
+      comment: savedEntry.comment,
+      duration: savedEntry.duration,
+      entryDate: savedEntry.entryDate,
+      timeAccountId: savedEntry.timeAccount.id
+    }));
   }
 }

@@ -10,21 +10,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { TimeAccount } from "src/account/model/entity/time-account";
+import { TimeAccount } from "../../../account/model/entity/time-account";
 import { TTBaseEntity } from "../../../common/model/entity/base";
 import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
 export class TimeEntry extends TTBaseEntity {
-    @Column({type: 'varchar', length: 100})
-    comment: string;
+    @Column({ type: 'varchar', length: 100 })
+    comment!: string;
 
-    @Column({type: 'integer'})
-    duration: number; // duration in minutes
+    @Column({ type: 'integer' })
+    duration!: number; // duration in minutes
 
-    @Column({type: 'timestamptz'})
-    entryDate: Date;
+    @Column({ type: 'timestamptz' })
+    entryDate!: Date;
 
     @ManyToOne(() => TimeAccount, (timeAccount) => timeAccount.id)
-    timeAccount: TimeAccount;
+    timeAccount!: TimeAccount;
 }
