@@ -16,28 +16,28 @@ import {  Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 
 @Entity()
 export class TimeAccount extends TTBaseEntity {
-    @Column({type: 'varchar', length: 50})
-    name: string;
+    @Column({ type: 'varchar', length: 50 })
+    name!: string;
 
-    @Column({type: 'varchar', length: 100})
-    description: string;
+    @Column({ type: 'varchar', length: 100 })
+    description!: string;
 
-    @Column({type: 'bigint'})
-    duration: number; // duration in minutes
+    @Column({ type: 'bigint' })
+    duration!: number; // duration in minutes
 
-    @Column({type: 'timestamptz'})
-    startDate: Date;
+    @Column({ type: 'timestamptz' })
+    startDate!: Date;
 
-    @Column({type: 'timestamptz'})
-    endDate: Date;
+    @Column({ type: 'timestamptz' })
+    endDate!: Date;
 
-    @Column({type: 'varchar', length: 50})
-    managerId: string;
+    @Column({ type: 'varchar', length: 50 })
+    managerId!: string;
 
     @ManyToMany(() => User, (user) => user.timeAccounts)
     @JoinTable()
-    users: User[]  
+    users!: User[];  
     
     @ManyToOne(() => TimeAccount, (timeAccount) => timeAccount.id)
-    timeAccount: TimeAccount;
+    timeAccount!: TimeAccount;
 }
