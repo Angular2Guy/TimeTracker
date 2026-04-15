@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Module } from '@nestjs/common';
-import { CommonModule } from 'src/common/common.module';
+import { CommonModule } from '../common/common.module';
 import { LoginController } from './controller/login.controller';
 import { LoginService } from './service/login.service';
 import { userProviders } from './model/entity/user.providers';

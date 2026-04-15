@@ -2,17 +2,17 @@ import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } fr
 
 export abstract class TTBaseEntity {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
     @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-    createDateTime: Date;
+    createDateTime!: Date;
 
     @Column({ type: 'varchar', length: 50 })
-    createdBy: string;
+    createdBy!: string;
 
     @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-    lastChangedDateTime: Date;
+    lastChangedDateTime!: Date;
 
     @Column({ type: 'varchar', length: 50 })
-    lastChangedBy: string;
+    lastChangedBy!: string;
 }

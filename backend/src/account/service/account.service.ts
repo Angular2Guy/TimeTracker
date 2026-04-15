@@ -1,10 +1,22 @@
+/**
+ *    Copyright 2023 Sven Loesekann
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { timeAccountRepoKey } from '../model/entity/time-account.providers';
 import { TimeAccount } from '../model/entity/time-account';
 import { In, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { AccountDto } from '../model/dto/account-dto';
-import { userRepoKey } from 'src/login/model/entity/user.providers';
-import { User } from 'src/login/model/entity/user';
+import { userRepoKey } from '../../login/model/entity/user.providers';
+import { User } from '../../login/model/entity/user';
 
 @Injectable()
 export class AccountService {
