@@ -13,7 +13,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { TokenPayload } from 'src/common/model/dto/token';
+import { TokenPayload } from '../../common/model/dto/token';
 import { defaultSecret } from '../common.module';
 
 @Injectable()
