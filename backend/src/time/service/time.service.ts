@@ -16,13 +16,12 @@ import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
 import { TimeDto } from '../model/dto/time-dto';
 import { TokenPayload } from '../../common/model/dto/token';
-import { AccountService } from '../../account/service/account.service';
 
 @Injectable()
 export class TimeService {
   private readonly logger = new Logger(TimeService.name, { timestamp: true });
   
-    constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>, private readonly accountService: AccountService) {}
+    constructor(@Inject(timeEntryRepoKey) private timeEntryRepository: Repository<TimeEntry>) {}
   
   async getTimes(date: Date, accountIds: string[]): Promise<TimeDto[]> {
     this.logger.debug(`Getting times for date ${date} and accountIds ${accountIds.join(',')}`);
@@ -32,9 +31,10 @@ export class TimeService {
         timeAccount: {
           id: In(accountIds)
         }
-      }
+      },
+      relations: ['timeAccount']
     });
-    this.logger.debug(`Found ${JSON.stringify(result)}`);
+    this.logger.debug(`Found ${result}`);
     const timeDtos = result.map(entry => ({
       id: entry.id,
       comment: entry.comment,
@@ -49,27 +49,27 @@ export class TimeService {
   async saveTime(date: Date, accountId: string, authorization: string, timeDto: TimeDto): Promise<TimeDto> {
     //this.logger.debug(`Posting time for date ${date}, accountId ${accountId} and timeDto ${JSON.stringify(timeDto)} and authorization ${authorization}`);
     const tokenPayload = JSON.parse(authorization) as TokenPayload;
-    this.logger.debug(`Token user: ${tokenPayload.Username} and Uuid: ${tokenPayload.Uuid} with roles ${tokenPayload.Roles.join(',')}`);
+    //this.logger.debug(`Token user: ${tokenPayload.Username} and Uuid: ${tokenPayload.Uuid} with roles ${tokenPayload.Roles.join(',')}`);
     //const user = await this.userService.getUserByUuid(tokenPayload.Uuid);
     //this.logger.debug(`User found: ${user.username} with role ${user.role} and Uuid ${user.uuid}`);
-    const timeAccount = await this.accountService.getAccountById(accountId);
     let timeEntry = await this.timeEntryRepository.findOne({ where: { id: timeDto.id, timeAccount: { id: accountId }, entryDate: date } });
     if (!timeEntry) {
-      //TODO fix time account reference
       timeEntry = this.timeEntryRepository.create({
         id: timeDto.id,
         comment: timeDto.comment,
         duration: timeDto.duration,
         entryDate: date,
-        createdBy: tokenPayload.Username,
-        lastChangedBy: tokenPayload.Username,
-      timeAccount: timeAccount!
+        createdBy: tokenPayload.Email,
+        lastChangedBy: tokenPayload.Email,
+      timeAccount: {
+        id: accountId
+      }
     });
     } else {
       timeEntry.comment = timeDto.comment;
       timeEntry.duration = timeDto.duration;
       timeEntry.entryDate = date;
-      timeEntry.lastChangedBy = tokenPayload.Username;
+      timeEntry.lastChangedBy = tokenPayload.Email;
     }
     return this.timeEntryRepository.save(timeEntry).then(savedEntry => ({
       id: savedEntry.id,

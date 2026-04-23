@@ -17,5 +17,5 @@ import { CommonModule} from '../common/common.module';
 import { timeEntryProviders } from './model/entity/time-entry.providers';
 import { AccountModule } from '../account/account.module';
 
-@Module({imports: [CommonModule, AccountModule], controllers: [TimeController], providers: [TimeService, ...timeEntryProviders]})
+@Module({imports: [CommonModule], controllers: [TimeController], providers: [TimeService, ...timeEntryProviders]})
 export class TimeModule {}
