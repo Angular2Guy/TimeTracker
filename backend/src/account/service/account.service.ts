@@ -104,4 +104,12 @@ const accountEntities = await query.getMany();
         accountEntity = await this.timeAccountRepository.save(accountEntity);
         return accountDto;
     }
+
+    public async getAccountById(accountId: string): Promise<TimeAccount> {
+        const accountEntity = await this.timeAccountRepository.findOne({where: {id: accountId}, relations: {users: true}});
+        if(!accountEntity) {
+            throw new Error('Account not found');
+        }
+        return accountEntity;
+    }
 }

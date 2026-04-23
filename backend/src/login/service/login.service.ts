@@ -73,6 +73,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
     }
     const payload = {
       Username: user.username,
+      Email: user.email,
       Uuid: user.uuid,
       Subject: 'TimeTracking',
       Roles: user.role.split(',').map(role => role.trim()),
@@ -87,6 +88,7 @@ private async verifyPassword(password: string, hash: string): Promise<boolean> {
     const payload = this.jwtService.decode(token);    
     const newPayload = {
       Username: payload['Username'],
+      Email: payload['Email'],
       Uuid: payload['Uuid'],
       Subject: 'TimeTracking',
       Roles: payload['Roles'],

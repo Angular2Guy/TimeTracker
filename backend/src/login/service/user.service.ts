@@ -23,4 +23,12 @@ export class UserService {
         const users = await this.usersRepository.find();
         return Promise.resolve(users);
     }
+
+    public async getUserByUuid(uuid: string): Promise<User> {
+        const user = await this.usersRepository.findOneBy({ uuid: uuid });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return Promise.resolve(user);
+    }
 }

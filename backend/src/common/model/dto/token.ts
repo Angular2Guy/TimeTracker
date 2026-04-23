@@ -17,5 +17,6 @@ export interface TokenPayload {
   Subject: string;
   Username: string;
   Uuid: string;
+  Email: string;
   Roles: string[];
 }
