@@ -77,7 +77,7 @@ export function UserAccounts() {
       layout: "fitColumns",
       columns: [
         { title: "Name", field: "name" },
-        { title: "Description", field: "description", editor: "input" },
+        { title: "Comment", field: "comment", editor: "input" },
         {
           title: "Time",
           field: "time",

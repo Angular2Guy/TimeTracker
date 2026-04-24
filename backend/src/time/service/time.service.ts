@@ -52,7 +52,7 @@ export class TimeService {
     //this.logger.debug(`Token user: ${tokenPayload.Username} and Uuid: ${tokenPayload.Uuid} with roles ${tokenPayload.Roles.join(',')}`);
     //const user = await this.userService.getUserByUuid(tokenPayload.Uuid);
     //this.logger.debug(`User found: ${user.username} with role ${user.role} and Uuid ${user.uuid}`);
-    let timeEntry = await this.timeEntryRepository.findOne({ where: { id: timeDto.id, timeAccount: { id: accountId }, entryDate: date } });
+    let timeEntry = await this.timeEntryRepository.findOne({ where: { id: timeDto.id, timeAccount: { id: accountId }, entryDate: date }, relations: ['timeAccount'] });
     if (!timeEntry) {
       timeEntry = this.timeEntryRepository.create({
         id: timeDto.id,
