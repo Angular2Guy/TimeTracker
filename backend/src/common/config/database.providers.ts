@@ -20,11 +20,11 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'sven1',
-        password: 'sven1',
-        database: 'timetracker',
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '5432', 10),
+        username: process.env.DB_USERNAME || 'sven1',
+        password: process.env.DB_PASSWORD || 'sven1',
+        database: process.env.DB_DATABASE || 'timetracker',
         entities: [
             __dirname + '/../../**/model/entity/*.{ts,js}',
             __dirname + '/../**/model/entity/*.{ts,js}', 
