@@ -64,7 +64,7 @@ jobs:
 
     - name: install Npm dependencies
       run: |
-        npm ci
+        npm install
 
     - name: Build with Npm
       run: |
