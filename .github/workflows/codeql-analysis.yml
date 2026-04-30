@@ -62,9 +62,11 @@ jobs:
 #    - name: Autobuild
 #      uses: github/codeql-action/autobuild@v3
 
-    - name: Build with Npm
+    - name: install Npm dependencies
       run: |
         npm ci
+
+    - name: Build with Npm
       run: |
         npm run build
 
