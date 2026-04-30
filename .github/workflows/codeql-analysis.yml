@@ -20,11 +20,11 @@ jobs:
         env:
           POSTGRES_USER: sven1
           POSTGRES_PASSWORD: sven1
-          POSTGRES_DB: movies
+          POSTGRES_DB: timetracker
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U sven1 -d movies"
+          --health-cmd="pg_isready -U sven1 -d timetracker"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -74,17 +74,17 @@ jobs:
 #        username: ${{ vars.DOCKERHUB_USERNAME }}
 #        password: ${{ secrets.DOCKERHUB_TOKEN }}    
 
-    - name: Build and push
-      uses: docker/build-push-action@v6
-      if: matrix.language == 'java'
-      with:
-        context: .
-        file: ./Dockerfile
-        build-args: |
-          JAR_PATH=${{ steps.jar.outputs.jar }}
-          LIB_PATH=${{ steps.aot.outputs.extracted }}        
-        push: false
-        tags: angular2guy/moviemanager:latest
+#    - name: Build and push
+#      uses: docker/build-push-action@v6
+#      if: matrix.language == 'java'
+#      with:
+#        context: .
+#        file: ./Dockerfile
+#        build-args: |
+#          JAR_PATH=${{ steps.jar.outputs.jar }}
+#          LIB_PATH=${{ steps.aot.outputs.extracted }}        
+#        push: false
+#        tags: angular2guy/moviemanager:latest
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
