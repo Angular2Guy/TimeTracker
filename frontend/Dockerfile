@@ -14,10 +14,10 @@ COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:stable-alpine
 
 # Copy build output to nginx html folder
-COPY --from=build /app/build/client /usr/share/nginx/html
+COPY --from=build-env /app/build/client /usr/share/nginx/html
 
 # Expose port
 EXPOSE 8080
