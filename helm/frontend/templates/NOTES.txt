@@ -1,0 +1,14 @@
+TimeTracker frontend has been deployed as a Knative Service.
+
+Get the service URL:
+  kubectl get ksvc {{ include "frontend.fullname" . }}
+
+Watch the service scale from zero:
+  kubectl get pods -l serving.knative.dev/service={{ include "frontend.fullname" . }} -w
+
+Check revision status:
+  kubectl get revision -l serving.knative.dev/service={{ include "frontend.fullname" . }}
+
+To curl the service (if using Kourier with minikube):
+  URL=$(kubectl get ksvc {{ include "frontend.fullname" . }} -o jsonpath='{.status.url}')
+  echo $URL

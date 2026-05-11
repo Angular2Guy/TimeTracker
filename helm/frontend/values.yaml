@@ -1,0 +1,15 @@
+image:
+  repository: angular2guy/timetracker-frontend
+  tag: latest
+  pullPolicy: IfNotPresent
+
+env:
+  API_URL: http://localhost:8088
+
+knative:
+  minScale: 0
+  maxScale: 3
+  concurrencyLimit: 250
+
+service:
+  port: 8080
