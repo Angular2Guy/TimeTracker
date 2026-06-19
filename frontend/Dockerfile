@@ -23,8 +23,5 @@ COPY --from=build-env /app/build/client /usr/share/nginx/html
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Expose port
-EXPOSE 8080
-
 # Start with entrypoint script
 ENTRYPOINT ["/docker-entrypoint.sh"]
