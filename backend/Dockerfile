@@ -3,5 +3,4 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 COPY dist/ .
-COPY .env.production .env
 CMD ["node", "main.js"]
