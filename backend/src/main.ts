@@ -18,7 +18,7 @@ import { Logger } from '@nestjs/common';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);  
+  const app = await NestFactory.create(AppModule, { cors: { origin: ['http://localhost:8080', 'http://localhost:5173', 'http://localhost:8088', 'http://localhost:3443'], credentials: true } });  
   const logger = new Logger('Bootstrap', { timestamp: true });
   logger.log('Port: '+process.env.PORT);
   await app.listen(process.env.PORT ?? 3443);
