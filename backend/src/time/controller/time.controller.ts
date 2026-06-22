@@ -14,6 +14,7 @@ import { Body, Controller, Get, Headers, Logger, Param, Post } from '@nestjs/com
 import { TimeService } from '../service/time.service';
 import { UserRole } from '../../login/model/entity/user';
 import { Roles } from '../../common/security/roles-decorator';
+import type { DayTimeDto, TimeAccountDto } from '../model/dto/day-time-dto';
 import type { TimeDto } from '../model/dto/time-dto';
 
 @Roles(UserRole.USER, UserRole.PM, UserRole.ADMIN)
@@ -26,6 +27,11 @@ export class TimeController {
   @Get('/day/:date/accounts/:accountIds')
   public getTimes(@Param('date') date: string, @Param('accountIds') accountIds: string): Promise<TimeDto[]> {    
     return this.timeService.getTimes(new Date(Date.parse(date)), accountIds.split(',').map(id => id.trim()));
+  }
+
+  @Get('/from/:from/to/:to/accounts/:accountId')
+  public getTimeFromTo(@Param('from') from: string, @Param('to') to: string, @Param('accountId') accountId: string): Promise<DayTimeDto[]> {    
+    return this.timeService.getTimeFromTo(new Date(Date.parse(from)), new Date(Date.parse(to)), accountId);
   }
 
   @Post('/day/:date/accounts/:accountId')

@@ -11,9 +11,10 @@
    limitations under the License.
  */
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { TimeEntry } from '../model/entity/time-entry';
 import { timeEntryRepoKey } from '../model/entity/time-entry.providers';
+import { DayTimeDto, TimeAccountDto } from '../model/dto/day-time-dto';
 import { TimeDto } from '../model/dto/time-dto';
 import { TokenPayload } from '../../common/model/dto/token';
 
@@ -44,6 +45,36 @@ export class TimeService {
     }));
     this.logger.debug(timeDtos)
     return timeDtos;
+  }
+
+  async getTimeFromTo(from: Date, to: Date, accountId: string): Promise<DayTimeDto[]> {
+    this.logger.debug(`Getting times from ${from} to ${to} for accountId ${accountId}`);
+    const result = await this.timeEntryRepository.find({
+      where: {
+        entryDate: Between(from, to),
+        timeAccount: {
+          id: accountId
+        }
+      },
+      relations: ['timeAccount']
+    });
+    this.logger.debug(`Found ${result}`);
+    const timeAccountDtos = result.map(entry => ({
+      id: entry.id,
+      comment: entry.comment,
+      duration: entry.duration,
+      entryDate: entry.entryDate,
+      timeAccountId: entry.timeAccount.id,
+      dayTimeDtos: {
+        name: entry.timeAccount.name,
+        description: entry.timeAccount.description,
+        duration: entry.timeAccount.duration,
+        startDate: entry.timeAccount.startDate,
+        endDate: entry.timeAccount.endDate
+      }
+    }));
+    this.logger.debug(timeAccountDtos)
+    return timeAccountDtos;
   }
 
   async saveTime(date: Date, accountId: string, authorization: string, timeDto: TimeDto): Promise<TimeDto> {
