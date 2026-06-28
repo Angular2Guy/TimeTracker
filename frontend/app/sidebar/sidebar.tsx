@@ -58,27 +58,23 @@ export default function SideBar({
     setOpen(newOpen);
   };
 
-  const openAccounts = () => navigate("/accounts");
-  const openTrackTime = () => navigate("/tracktime");
-  const openReports = () => navigate("/reports");
-
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
         {[
           { text: "Accounts", 
             roles: [UserRole.ADMIN, UserRole.PM],
-            route: openAccounts
+            route: () => navigate("/accounts")
            },
           {
             text: "Track Time",
             roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
-            route: openTrackTime
+            route: () => navigate("/tracktime")
           },
           {
             text: "Reports",
             roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
-            route: openReports
+            route: () => navigate("/reports")
           },
         ]
           .filter((item) =>
