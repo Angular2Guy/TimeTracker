@@ -130,7 +130,7 @@ export function UserAccounts() {
       controller.current,
     ).then(async (data) => {        
       const userAccounts = await getUserTimeByIdAndDay(
-      selectedDate.toJSDate(),
+      selectedDate.toJSDate(),      
       data.filter((row) => row?.id).map((row) => row.id) as string[],
       GlobalState.jwtToken,
       controller.current

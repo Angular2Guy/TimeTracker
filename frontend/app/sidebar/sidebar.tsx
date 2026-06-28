@@ -66,14 +66,19 @@ export default function SideBar({
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
         {[
-          { text: "Accounts", roles: [UserRole.ADMIN, UserRole.PM] },
+          { text: "Accounts", 
+            roles: [UserRole.ADMIN, UserRole.PM],
+            route: openAccounts
+           },
           {
             text: "Track Time",
             roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
+            route: openTrackTime
           },
           {
             text: "Reports",
             roles: [UserRole.USER, UserRole.PM, UserRole.ADMIN],
+            route: openReports
           },
         ]
           .filter((item) =>
@@ -83,11 +88,7 @@ export default function SideBar({
             <ListItem key={item.text} disablePadding>
               <ListItemButton
                 onClick={
-                  index === 0
-                    ? openAccounts
-                    : index === 1
-                      ? openTrackTime
-                      : openReports
+                  item.route
                 }
               >
                 <ListItemText primary={item.text} />
