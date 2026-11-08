@@ -5,7 +5,7 @@ image:
 
 postgresql:
   user: sven1
-  password: changeme
+  password: sven1
   database: timetracker
 
 service:
