@@ -1,10 +1,10 @@
 image:
   repository: postgres
-  tag: latest
+  tag: "18"
   pullPolicy: IfNotPresent
 
 postgresql:
-  user: timetracker
+  user: sven1
   password: changeme
   database: timetracker
 

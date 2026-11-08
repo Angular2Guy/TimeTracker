@@ -1,5 +1,5 @@
 #!/bin/bash
-minikube start --cpus=4 --memory=16384 --driver=docker
+minikube start --cpus=8 --memory=24576 --disk-size=32g
 # Install Knative Serving
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.22.0/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.22.0/serving-core.yaml
