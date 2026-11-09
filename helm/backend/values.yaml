@@ -5,7 +5,6 @@ image:
 
 env:
   NODE_ENV: production
-  PORT: "3443"
   DB_HOST: localhost
   DB_PORT: "5432"
   DB_USERNAME: sven1
@@ -18,4 +17,4 @@ knative:
   concurrencyLimit: 250
 
 service:
-  port: 3443
+  port: 8080
