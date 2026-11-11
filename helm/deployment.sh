@@ -7,3 +7,6 @@ helm install my-frontend ./helm/frontend --set env.API_URL=http://my-backend.def
 
 # 3. read the actual URL Knative assigned
 kubectl get ksvc my-frontend -o jsonpath='{.status.url}'
+
+# 4. access the database 
+kubectl exec -it deploy/my-postgres -- psql -U sven1 -d timetracker
