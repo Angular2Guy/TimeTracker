@@ -88,11 +88,6 @@ const accountEntities = await query.getMany();
         }
         if(!accountEntity) {
             accountEntity = this.timeAccountRepository.create({
-                name: accountDto.name,
-                description: accountDto.description,
-                duration: accountDto.duration,
-                startDate: accountDto.startDate,
-                endDate: accountDto.endDate,    
                 managerId: managerUser.id,
                 createdBy: managerUser.email,
                 createDateTime: new Date(),
@@ -100,12 +95,26 @@ const accountEntities = await query.getMany();
                 lastChangedBy: managerUser.email
             });            
         }                
+        accountEntity.name = accountDto.name;
+        accountEntity.description = accountDto.description;
+        accountEntity.duration = accountDto.duration;
+        accountEntity.startDate = accountDto.startDate;
+        accountEntity.endDate = accountDto.endDate;
         const myUsers = await this.userRepository.find({where: {id: In(accountDto.userIds)}})
         accountEntity.users = myUsers;          
         accountEntity.lastChangedBy = managerUser.email;  
         accountEntity.lastChangedDateTime = new Date();
         accountEntity = await this.timeAccountRepository.save(accountEntity);
-        return accountDto;
+        return {
+            id: accountEntity.id,
+            name: accountEntity.name,
+            description: accountEntity.description,
+            duration: accountEntity.duration,
+            startDate: accountEntity.startDate,
+            endDate: accountEntity.endDate,
+            managerId: accountEntity.managerId,
+            userIds: accountEntity.users.map(user => user.id)
+        };
     }
 
     public async getAccountById(accountId: string): Promise<TimeAccount> {
