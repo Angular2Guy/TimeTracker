@@ -15,8 +15,8 @@ export interface TimeAccountDto {
   name: string;
   description: string;
   duration: number; // duration in minutes
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   managerId: string;
   userIds: string[];
 }

@@ -66,6 +66,10 @@ export function UserAccounts() {
   useEffect(() => {
     console.log("Selected date changed:", selectedDate.toISODate());
     loadData();
+    return () => {
+      controller.current?.abort();
+      controller.current = null;
+    };
   }, [selectedDate]);
 
   useEffect(() => {
@@ -114,10 +118,6 @@ export function UserAccounts() {
     };
   }, []);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = () => {
     if (!!controller.current) {
       controller.current.abort();
@@ -147,17 +147,43 @@ export function UserAccounts() {
         } as TableRow)));
       })
       .catch((error) => {
-        console.error("Error fetching time accounts:", error);
+        if (error?.name !== "AbortError") {
+          console.error("Error fetching time accounts:", error);
+        }
       });
     };
 
   useEffect(() => {
     const table = tableInstanceRef.current;
-    if (table && Array.isArray(tableData)) {
-      table.replaceData(tableData).catch(() => {
-        table.setData(tableData);
-      });
-    }
+    if (!table || !Array.isArray(tableData)) return;
+    let cancelled = false;
+    const applyData = async () => {
+      if (!table.initialized) {
+        await new Promise<void>((resolve) => {
+          const done = () => resolve();
+          table.on("tableBuilt", done);
+          table.on("tableDestroyed", done);
+        });
+      }
+      if (cancelled || table.destroyed || tableInstanceRef.current !== table) {
+        return;
+      }
+      try {
+        await table.replaceData(tableData);
+      } catch {
+        if (!cancelled && !table.destroyed && tableInstanceRef.current === table) {
+          try {
+            table.setData(tableData);
+          } catch {
+            // table was destroyed meanwhile
+          }
+        }
+      }
+    };
+    applyData();
+    return () => {
+      cancelled = true;
+    };
   }, [tableData]);
 
   const save = () => {

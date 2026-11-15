@@ -16,6 +16,9 @@ import { HttpMethod, request } from "./time-account.service";
 import { apiPrefix, getApiUrl, handleResponse } from "./login.service";
 
 export const getUserTimeByIdAndDay = async (entryDate: Date, timeAccountIds: string[], jwtToken: string, controller: AbortController | null) => {
+    if (timeAccountIds.length === 0) {
+        return [] as UserAccountDto[];
+    }
     const requestOptions = request(jwtToken, controller);
     const result = await fetch(
         `${getApiUrl()}${apiPrefix}/time/day/${entryDate.toISOString().split('T')[0]}/accounts/${timeAccountIds.join(',')}`,

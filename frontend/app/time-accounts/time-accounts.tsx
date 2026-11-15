@@ -66,14 +66,29 @@ export function TimeAccounts() {
     setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
   };
 
+  const toUtcIso = (value: string | Date): string => {
+    let dt: DateTime;
+    if (value instanceof Date) {
+      dt = DateTime.fromJSDate(value);
+    } else {
+      const str = String(value).trim();
+      dt = /^\d{2}\.\d{2}\.\d{4}$/.test(str)
+        ? DateTime.fromFormat(str, "dd.MM.yyyy")
+        : DateTime.fromISO(str, { setZone: true });
+    }
+    return dt.isValid ? dt.toUTC().toISO() ?? String(value) : String(value);
+  };
+
   const save = () => {
-    console.log("save", selectedUsers, tableData, selectedRowRef.current);
     const selectedRow = selectedRowRef.current;
     if (!selectedRow) {
       console.warn("No row selected to save");
       return;
     }
+    selectedRow.startDate = toUtcIso(selectedRow.startDate);
+    selectedRow.endDate = toUtcIso(selectedRow.endDate);
     selectedRow.userIds = selectedUsers.map((u) => u.id);
+    console.log("save", selectedUsers, tableData, selectedRow);
     postTimeAccount(
       GlobalState.jwtToken,
       selectedRow as TimeAccountDto,
@@ -96,8 +111,8 @@ export function TimeAccounts() {
       name: "",
       description: "",
       duration: 0,
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: DateTime.utc().startOf("day").toISO() ?? "",
+      endDate: DateTime.utc().endOf("day").toISO() ?? "",
       managerId: globalUserIdState,
       userIds: [],
     } as TimeAccountDto;
@@ -156,9 +171,9 @@ export function TimeAccounts() {
                 }
               },
               editorParams: {
-                min: "01/01/2000", // the minimum allowed value for the date picker
-                max: "02/12/2100", // the maximum allowed value for the date picker
-                format: "dd.MM.yyyy", // the format of the date value stored in the cell
+                min: "2000-01-01", // the minimum allowed value for the date picker
+                max: "2100-12-02", // the maximum allowed value for the date picker
+                format: "iso", // ISO strings are what the API expects
                 verticalNavigation: "table", //navigate cursor around table without changing the value
                 elementAttributes: {
                   title: "slide bar to choose option", // custom tooltip
@@ -186,9 +201,9 @@ export function TimeAccounts() {
                 }
               },
               editorParams: {
-                min: "01/01/2000", // the minimum allowed value for the date picker
-                max: "02/12/2100", // the maximum allowed value for the date picker
-                format: "dd.MM.yyyy", // the format of the date value stored in the cell
+                min: "2000-01-01", // the minimum allowed value for the date picker
+                max: "2100-12-02", // the maximum allowed value for the date picker
+                format: "iso", // ISO strings are what the API expects
                 verticalNavigation: "table", //navigate cursor around table without changing the value
                 elementAttributes: {
                   title: "slide bar to choose option", // custom tooltip
@@ -202,6 +217,18 @@ export function TimeAccounts() {
         table.on("rowSelected", (row: any) => {
           selectedRowRef.current = row.getData();           
           setSelectedUsers(usersRef.current.filter((u) => (row.getData().userIds as string[])?.includes(u.id)));          
+        });
+
+        // keep the selected row's data in sync when a cell is edited
+        table.on("cellEdited", (cell: any) => {
+          const field = cell.getField();
+          if (field === "startDate" || field === "endDate") {
+            const normalized = toUtcIso(cell.getValue());
+            if (normalized !== cell.getValue()) {
+              cell.setValue(normalized);
+            }
+          }
+          selectedRowRef.current = cell.getRow().getData();
         });
 
         tableInstanceRef.current = table;
