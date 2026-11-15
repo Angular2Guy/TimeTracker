@@ -66,17 +66,25 @@ export function TimeAccounts() {
     setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
   };
 
-  const toUtcIso = (value: string | Date): string => {
+  const toUtcIso = (value: string | Date, endOfDay = false): string => {
     let dt: DateTime;
     if (value instanceof Date) {
       dt = DateTime.fromJSDate(value);
     } else {
       const str = String(value).trim();
-      dt = /^\d{2}\.\d{2}\.\d{4}$/.test(str)
-        ? DateTime.fromFormat(str, "dd.MM.yyyy")
-        : DateTime.fromISO(str, { setZone: true });
+      if (/^\d{2}\.\d{2}\.\d{4}$/.test(str)) {
+        dt = DateTime.fromFormat(str, "dd.MM.yyyy");
+      } else if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+        dt = DateTime.fromISO(str);
+      } else {
+        dt = DateTime.fromISO(str, { setZone: true });
+      }
     }
-    return dt.isValid ? dt.toUTC().toISO() ?? String(value) : String(value);
+    if (!dt.isValid) return String(value);
+    // Account dates are calendar days, so keep the selected date and use UTC
+    // boundaries instead of shifting it by the local timezone offset.
+    const day = DateTime.utc(dt.year, dt.month, dt.day);
+    return (endOfDay ? day.endOf("day") : day.startOf("day")).toISO() ?? String(value);
   };
 
   const save = () => {
@@ -86,7 +94,7 @@ export function TimeAccounts() {
       return;
     }
     selectedRow.startDate = toUtcIso(selectedRow.startDate);
-    selectedRow.endDate = toUtcIso(selectedRow.endDate);
+    selectedRow.endDate = toUtcIso(selectedRow.endDate, true);
     selectedRow.userIds = selectedUsers.map((u) => u.id);
     console.log("save", selectedUsers, tableData, selectedRow);
     postTimeAccount(
@@ -163,8 +171,8 @@ export function TimeAccounts() {
                 try {
                   const dt =
                     typeof v === "string"
-                      ? DateTime.fromISO(v)
-                      : DateTime.fromJSDate(new Date(v));
+                      ? DateTime.fromISO(v, { setZone: true }).setZone("utc")
+                      : DateTime.fromJSDate(new Date(v)).toUTC();
                   return dt && dt.isValid ? dt.toFormat("dd.MM.yyyy") : "";
                 } catch (e) {
                   return "";
@@ -193,8 +201,8 @@ export function TimeAccounts() {
                 try {
                   const dt =
                     typeof v === "string"
-                      ? DateTime.fromISO(v)
-                      : DateTime.fromJSDate(new Date(v));
+                      ? DateTime.fromISO(v, { setZone: true }).setZone("utc")
+                      : DateTime.fromJSDate(new Date(v)).toUTC();
                   return dt && dt.isValid ? dt.toFormat("dd.MM.yyyy") : "";
                 } catch (e) {
                   return "";
@@ -223,7 +231,10 @@ export function TimeAccounts() {
         table.on("cellEdited", (cell: any) => {
           const field = cell.getField();
           if (field === "startDate" || field === "endDate") {
-            const normalized = toUtcIso(cell.getValue());
+            const normalized = toUtcIso(
+              cell.getValue(),
+              field === "endDate",
+            );
             if (normalized !== cell.getValue()) {
               cell.setValue(normalized);
             }
@@ -252,18 +263,36 @@ export function TimeAccounts() {
 
   // Update Tabulator when tableData state changes
   useEffect(() => {
-    const inst = tableInstanceRef.current;
-    if (!inst) return;
-    try {
-      // try replaceData first, fallback to setData
-      if (typeof inst.replaceData === "function") {
-        inst.replaceData(tableData);
-      } else if (typeof inst.setData === "function") {
-        inst.setData(tableData);
+    const table = tableInstanceRef.current;
+    if (!table || !Array.isArray(tableData)) return;
+    let cancelled = false;
+    const applyData = async () => {
+      if (!table.initialized) {
+        await new Promise<void>((resolve) => {
+          const done = () => resolve();
+          table.on("tableBuilt", done);
+          table.on("tableDestroyed", done);
+        });
       }
-    } catch (e) {
-      // ignore update errors
-    }
+      if (cancelled || table.destroyed || tableInstanceRef.current !== table) {
+        return;
+      }
+      try {
+        await table.replaceData(tableData);
+      } catch {
+        if (!cancelled && !table.destroyed && tableInstanceRef.current === table) {
+          try {
+            table.setData(tableData);
+          } catch {
+            // table was destroyed meanwhile
+          }
+        }
+      }
+    };
+    applyData();
+    return () => {
+      cancelled = true;
+    };
   }, [tableData]);
 
   useEffect(() => {

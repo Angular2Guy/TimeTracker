@@ -10,6 +10,7 @@ spec:
       annotations:
         autoscaling.knative.dev/min-scale: "{{ .Values.knative.minScale }}"
         autoscaling.knative.dev/max-scale: "{{ .Values.knative.maxScale }}"
+        checksum/nginx-config: {{ include (print $.Template.BasePath "/nginx-config.yaml") . | sha256sum }}
     spec:
       containerConcurrency: {{ .Values.knative.concurrencyLimit }}
       containers:
