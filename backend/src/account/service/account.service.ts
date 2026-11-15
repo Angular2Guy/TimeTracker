@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { timeAccountRepoKey } from '../model/entity/time-account.providers';
 import { TimeAccount } from '../model/entity/time-account';
 import { In, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
@@ -78,11 +78,14 @@ const accountEntities = await query.getMany();
     }
 
     public async saveAccount(userUuid: string, accountDto: AccountDto): Promise<AccountDto> {
+        const managerUser = await this.userRepository.findOne({where: [{id: userUuid}, {uuid: userUuid}]});
+        if(!managerUser) {
+            throw new UnauthorizedException('User not found');
+        }
         let accountEntity = await this.timeAccountRepository.findOne({where: {id: accountDto.id}, relations: {users: true}});
-        if(accountEntity && accountEntity.managerId !== userUuid) {
+        if(accountEntity && accountEntity.managerId !== managerUser.id) {
             return {} as AccountDto;
         }
-        const managerUser = await this.userRepository.findOneBy({uuid: userUuid});        
         if(!accountEntity) {
             accountEntity = this.timeAccountRepository.create({
                 name: accountDto.name,
@@ -90,16 +93,16 @@ const accountEntities = await query.getMany();
                 duration: accountDto.duration,
                 startDate: accountDto.startDate,
                 endDate: accountDto.endDate,    
-                managerId: userUuid,
-                createdBy: managerUser?.email,
+                managerId: managerUser.id,
+                createdBy: managerUser.email,
                 createDateTime: new Date(),
                 lastChangedDateTime: new Date(),
-                lastChangedBy: managerUser?.email
+                lastChangedBy: managerUser.email
             });            
         }                
         const myUsers = await this.userRepository.find({where: {id: In(accountDto.userIds)}})
         accountEntity.users = myUsers;          
-        accountEntity.lastChangedBy = managerUser?.email ?? accountEntity.lastChangedBy;  
+        accountEntity.lastChangedBy = managerUser.email;  
         accountEntity.lastChangedDateTime = new Date();
         accountEntity = await this.timeAccountRepository.save(accountEntity);
         return accountDto;
