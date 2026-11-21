@@ -18,7 +18,19 @@ import { Logger } from '@nestjs/common';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: { origin: ['http://localhost:8080', 'http://localhost:5173', 'http://localhost:8088', 'http://localhost:3443'], credentials: true } });  
+  const allowedOrigins = ['http://localhost:8080', 'http://localhost:5173', 'http://localhost:8088', 'http://localhost:3000', 'http://localhost:3443'];
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+    },
+  });
   const logger = new Logger('Bootstrap', { timestamp: true });
   logger.log('Port: '+process.env.PORT);
   await app.listen(process.env.PORT ?? 3443);
