@@ -25,7 +25,7 @@ export function UserReports() {
   let controller = useRef<AbortController | null>(null);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState(DateTime.now());
+  const [selectedMonth, setSelectedMonth] = useState<DateTime>(DateTime.now());
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const [tableData, setTableData] = useState([] as ReportRow[]);
   const tableRef = useRef<HTMLDivElement | null>(null);

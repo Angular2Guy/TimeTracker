@@ -45,9 +45,9 @@ export function UserAccounts() {
   let controller = useRef<AbortController | null>(null);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(DateTime.now());
-  const [startTime, setStartTime] = useState(DateTime.now());
-  const [endTime, setEndTime] = useState(DateTime.now());
+  const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
+  const [startTime, setStartTime] = useState<DateTime>(DateTime.now());
+  const [endTime, setEndTime] = useState<DateTime>(DateTime.now());
   const [pauseTime, setPauseTime] = useState(0);
   const [globalUserIdState, setGlobalUserIdState] = useAtom(GlobalState.userId);
   const [tableData, setTableData] = useState([] as TableRow[]);
