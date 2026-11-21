@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Login } from "../login/login";
-import type { Route } from "./+types/login";
+import type { Route } from "./+types/login-signin";
 
 export function meta({}: Route.MetaArgs) {
   return [
